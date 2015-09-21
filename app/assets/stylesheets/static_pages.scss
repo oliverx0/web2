@@ -1,3 +1,106 @@
 // Place all the styles related to the static_pages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import "slick";
+
+body{
+  background-color: #fbfbfb;
+}
+.slider{
+  max-height: 300px;
+}
+.liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+
+.italify{
+  font-style: italic;
+}
+
+.header{
+  height: 150px;
+}
+.top-menu-el{
+
+  // font-family: 'Arimo', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;
+  color: #333;
+  font-size: 14px;
+  line-height: 3.2em;
+  letter-spacing: 2px;
+  font-style: normal;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.top-menu-el:hover{
+
+  background-image: linear-gradient(
+        180deg, rgba(0,0,0,0),
+        rgba(0,0,0,0) 81%,
+        #222222 81.1%,
+        #222222 85%,
+        rgba(0,0,0,0) 85.1%,
+        rgba(0,0,0,0)
+    );
+    text-decoration: none;
+
+}
+
+.top-title{
+  font-family: 'Josefin Sans', sans-serif;
+  letter-spacing: 0.289474em;
+  font-size: 33px;
+  color: #111;
+}
+
+.content-title
+{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 31px;
+  color: #111;
+}
+
+.content{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  color: #111;
+}
+
+.content-strong
+{
+  font-weight: bold;
+}
+
+.accordion{
+  margin-top: 10px;
+  border-left: solid 1px #bbb;
+
+}
+
+.accordion-margin{
+
+  margin-top: 10px;
+  padding-right: 20px;
+}
+
+.content-normal{
+  margin-top: 3px;
+  margin-bottom: 35px;
+}
+
+.location{
+  margin-top: 3px;
+  margin-bottom: 58px;
+}
+
+.bar{
+
+  border-bottom: 1px solid #bbb;
+  width: 100%;
+
+}
+
+.main{
+  font-size: 16px;
+
+}
