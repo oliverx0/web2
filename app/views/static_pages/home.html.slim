@@ -25,7 +25,7 @@ div(style="height: 100%")
         b RESUME
         div(style="text-align: right; float: right")
           div(style="padding-right:5px;float: left; padding-top: 3px")
-            a.uk-icon-hover.uk-icon-download.uk-icon-small.uk-margin-left(style=" font-size: 15px; " data-uk-tooltip="{offset:20, animation: true,pos:'top'}" title="Download digital version" href="https://s3-us-west-2.amazonaws.com/ojh22/Oliver+Hoffman+Resume+-+20150827.pdf" target="_blank")
+            a.uk-icon-hover.uk-icon-download.uk-icon-small.uk-margin-left(style=" font-size: 15px; " data-uk-tooltip="{offset:20, animation: true,pos:'top'}" title="Download PDF version" href="https://s3-us-west-2.amazonaws.com/ojh22/Oliver+Hoffman+Resume+-+20150827.pdf" target="_blank")
           a.uk-icon-hover.uk-icon-github.uk-icon-small.uk-margin-left(style="font-size: 15px; padding-left: 20px; border-left: 1px solid #bbb; " href="https://github.com/oliverx0" target="_blank")
           a.uk-icon-hover.uk-icon-facebook.uk-icon-small.uk-margin-left(style="padding-left: 5px; font-size: 15px" href="https://www.facebook.com/oliverhoffmanx0" target="_blank")
           a.uk-icon-hover.uk-icon-linkedin.uk-icon-small.uk-margin-left(style="padding-left: 5px; font-size: 15px; padding-right: 20px; border-right: 1px solid #bbb" href="https://es.linkedin.com/pub/oliver-hoffman/77/110/40a" target="_blank")
@@ -257,36 +257,39 @@ div(style="height: 100%")
               div.uk-width-1-1
                 div.uk-grid
                   div.uk-width-medium-1-4.italify.uk-text-left
-                    div.uk-margin-left Programming
+                    div#skills1.uk-margin-left Programming
                   div.uk-width-medium-3-4(style="border-left: 1px solid #bbb")
                     div.main(style="width:100%; height:200px")
-                      #skill1.skill-circle
-                      #skill2.skill-circle
-                      #skill3.skill-circle
-                      #skill4.skill-circle
-                      #skill5.skill-circle
-                      #skill6.skill-circle
-                      #skill7.skill-circle
-                      #skill8.skill-circle
+                      #skills1-1.skill-circle
+                      #skills1-2.skill-circle
+                      #skills1-3.skill-circle
+                      #skills1-4.skill-circle
+                      #skills1-5.skill-circle
+                      #skills1-6.skill-circle
+                      #skills1-7.skill-circle
+                      #skills1-8.skill-circle
               div.uk-width-1-1.uk-margin-large-top
                 div.uk-grid
                   div.uk-width-medium-1-4.italify.uk-text-left
-                    div.uk-margin-left Web Dev
+                    div#skills2.uk-margin-left Web Dev
                   div.uk-width-medium-3-4(style="border-left: 1px solid #bbb;")
-                    div.main(style="width:100%; height:200px")
+                    div.main(style="width:100%; height:225px")
                       #chart
 
               div.uk-width-1-1.uk-margin-large-top
                 div.uk-grid
                   div.uk-width-medium-1-4.italify.uk-text-left
-                    div.uk-margin-left Other
+                    div#skills3.uk-margin-left Other
                   div.uk-width-medium-3-4(style="border-left: 1px solid #bbb;")
                     div.main(style="width:100%; height:100px")
-                      #skill16.skill-circle
-                      #skill17.skill-circle
-                      #skill18.skill-circle
-                      #skill19.skill-circle
-
+                      #skills3-1.skill-circle
+                      #skills3-2.skill-circle
+                      #skills3-3.skill-circle
+                      #skills3-4.skill-circle
+                      #skills3-5.skill-circle
+                      #skills3-6.skill-circle
+                      #skills3-7.skill-circle
+                      #skills3-8.skill-circle
 
 
     div.uk-width-medium-1-5
@@ -295,26 +298,89 @@ div(style="height: 100%")
 
 javascript:
 
-  manga();
-  start();
+
+  var skills1Seen  = false
+  var skills2Seen = false
+  var skills3Seen = false
 
 
-  function start() {
 
-      skills = ['C', 'C++', 'C#', 'Java', 'Python', 'PHP', 'iOS', 'Android', 'Ruby on Rails', 'Javascript', 'CSS', 'HTML', 'Sass', 'Slim', 'UIKIT', 'Hardware', 'Design', 'Speechcraft', 'Algorithms']
-      values = [90, 80, 45, 75, 85, 55, 45, 40, 75, 75, 90, 95, 80, 85, 90, 75, 85, 90, 90]
 
-      for (var i = 0; i < skills.length; i++) {
 
-          radialProgress(document.getElementById('skill'+(i+1)))
-              .label(skills[i])
-              .onClick(start)
+
+
+
+  $(window).scroll(function() {
+    function skills1() {
+        skills1 = ['C', 'C++', 'C#', 'Java', 'Python', 'PHP', 'iOS', 'Android']
+        values1 = [90, 80, 45, 75, 85, 55, 45, 40]
+        for (var i = 0; i < skills1.length; i++) {
+
+            radialProgress(document.getElementById('skills1-'+(i+1)))
+                .label(skills1[i])
+                .diameter(100)
+                .value(values1[i])
+                .render();
+            //Do something
+        }
+    }
+   var hT = $('#skills1').offset().top,
+       hH = $('#skills1').outerHeight(),
+       wH = $(window).height(),
+       wS = $(this).scrollTop();
+        if (wS > (hT+hH-wH)){
+            if(skills1Seen == false)
+            {
+                skills1();
+                skills1Seen = true;
+            }
+
+         }
+  });
+
+  $(window).scroll(function() {
+   var hT = $('#skills2').offset().top,
+       hH = $('#skills2').outerHeight(),
+       wH = $(window).height(),
+       wS = $(this).scrollTop();
+        if (wS > (hT+hH-wH)){
+            if(skills2Seen == false)
+            {
+                skills2();
+                skills2Seen = true;
+            }
+
+         }
+  });
+  $(window).scroll(function() {
+    function skills3() {
+      skills3 = ['Hardware', 'Design', 'Speechcraft', 'Algorithms', 'Git', 'AWS', 'Unix', 'D3.js']
+
+
+      values3 = [75, 85, 90, 90, 80, 80, 70, 60]
+      for (var i2 = 0; i2 < skills3.length; i2++) {
+
+          radialProgress(document.getElementById('skills3-'+(i2+1)))
+              .label(skills3[i2])
               .diameter(100)
-              .value(values[i])
+              .value(values3[i2])
               .render();
           //Do something
       }
   }
+   var hT = $('#skills3').offset().top,
+       hH = $('#skills3').outerHeight(),
+       wH = $(window).height(),
+       wS = $(this).scrollTop();
+        if (wS > (hT+hH-wH)){
+            if(skills3Seen == false)
+            {
+                skills3();
+                skills3Seen = true;
+            }
+
+         }
+  });
 
 
 / // Main Header

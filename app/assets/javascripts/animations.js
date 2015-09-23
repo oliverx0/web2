@@ -257,7 +257,7 @@ function radialProgress(parent) {
 
 }
 
-function manga()
+function skills2()
 {
 
     var data =[
