@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'slim-rails'
 gem 'uikit-sass-rails'
-gem 'simple_form'
+gem 'font-awesome-rails'
 gem 'gon'
 gem 'featherlight'
 gem 'jquery-slick-rails'
