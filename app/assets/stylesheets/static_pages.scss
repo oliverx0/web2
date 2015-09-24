@@ -1,195 +1,195 @@
-// // Place all the styles related to the static_pages controller here.
-// // They will automatically be included in application.css.
-// // You can use Sass (SCSS) here: http://sass-lang.com/
+// Place all the styles related to the static_pages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
 
-// @import "slick";
+@import "slick";
 
-// body{
-//   background-color: #fbfbfb;
-// }
+body{
+  background-color: #fbfbfb;
+}
 
-// .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+.liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
 
-// .italify{
-//   font-style: italic;
-// }
+.italify{
+  font-style: italic;
+}
 
-// .header{
-//   height: 150px;
-// }
-// .top-menu-el{
+.header{
+  height: 150px;
+}
+.top-menu-el{
 
-//   // font-family: 'Arimo', sans-serif;
-//   font-family: 'Josefin Sans', sans-serif;
-//   color: #333;
-//   font-size: 14px;
-//   line-height: 3.2em;
-//   letter-spacing: 2px;
-//   font-style: normal;
-//   cursor: pointer;
-//   display: inline-block;
-// }
+  // font-family: 'Arimo', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;
+  color: #333;
+  font-size: 14px;
+  line-height: 3.2em;
+  letter-spacing: 2px;
+  font-style: normal;
+  cursor: pointer;
+  display: inline-block;
+}
 
-// .top-menu-el:hover{
+.top-menu-el:hover{
 
-//   background-image: linear-gradient(
-//         180deg, rgba(0,0,0,0),
-//         rgba(0,0,0,0) 81%,
-//         #222222 81.1%,
-//         #222222 85%,
-//         rgba(0,0,0,0) 85.1%,
-//         rgba(0,0,0,0)
-//     );
-//     text-decoration: none;
+  background-image: linear-gradient(
+        180deg, rgba(0,0,0,0),
+        rgba(0,0,0,0) 81%,
+        #222222 81.1%,
+        #222222 85%,
+        rgba(0,0,0,0) 85.1%,
+        rgba(0,0,0,0)
+    );
+    text-decoration: none;
 
-// }
+}
 
-// .top-title{
-//   font-family: 'Josefin Sans', sans-serif;
-//   letter-spacing: 0.289474em;
-//   font-size: 33px;
-//   color: #111;
-// }
+.top-title{
+  font-family: 'Josefin Sans', sans-serif;
+  letter-spacing: 0.289474em;
+  font-size: 33px;
+  color: #111;
+}
 
-// .content-title
-// {
-//   font-family: 'Open Sans', sans-serif;
-//   font-size: 31px;
-//   color: #111;
-// }
+.content-title
+{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 31px;
+  color: #111;
+}
 
-// .content{
-//   font-family: 'Open Sans', sans-serif;
-//   font-size: 14px;
-//   color: #111;
-// }
+.content{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  color: #111;
+}
 
-// .content-strong
-// {
-//   font-weight: bold;
-// }
+.content-strong
+{
+  font-weight: bold;
+}
 
-// .accordion{
-//   margin-top: 10px;
-//   border-left: solid 1px #bbb;
+.accordion{
+  margin-top: 10px;
+  border-left: solid 1px #bbb;
 
-// }
+}
 
-// .accordion-margin{
+.accordion-margin{
 
-//   margin-top: 10px;
-//   padding-right: 20px;
-// }
+  margin-top: 10px;
+  padding-right: 20px;
+}
 
-// .content-normal{
-//   margin-top: 3px;
-//   margin-bottom: 35px;
-// }
+.content-normal{
+  margin-top: 3px;
+  margin-bottom: 35px;
+}
 
-// .location{
-//   margin-top: 3px;
-//   margin-bottom: 58px;
-// }
+.location{
+  margin-top: 3px;
+  margin-bottom: 58px;
+}
 
-// .bar{
+.bar{
 
-//   border-bottom: 1px solid #bbb;
-//   width: 100%;
+  border-bottom: 1px solid #bbb;
+  width: 100%;
 
-// }
+}
 
-// .main{
-//   font-size: 16px;
+.main{
+  font-size: 16px;
 
-// }
-
-
+}
 
 
-// #test .arc2 {
-//             stroke-weight:0.1;
-//             fill: #3660b0;
-//         }
 
 
-//         .skill-circle {
-//             width: 25%;
-//             height: 120px;
-//             padding-right: 20px;
-//             box-sizing: border-box;
-//             float: left;
-//         }
-
-//         .radial {
-//             border-radius: 3px;
-//             background: #FFFFFF;
-//             color: #000;
-
-//         }
-
-// .background {
-//     fill: red;
-//     fill-opacity: 0.01;
-// }
-
-// .component {
-//     fill: #e1e1e1;
-
-// }
-
-// .component .label {
-//     font-family: 'Josefin Sans', sans-serif;
-//     text-anchor: middle;
-//     fill: #333;
-//     font-size: 15px;
-// }
-
-// .arc {
-//     stroke-weight:0.1;
-//     fill: #333;
+#test .arc2 {
+            stroke-weight:0.1;
+            fill: #3660b0;
+        }
 
 
-// }
+        .skill-circle {
+            width: 25%;
+            height: 120px;
+            padding-right: 20px;
+            box-sizing: border-box;
+            float: left;
+        }
 
-// .phrase{
+        .radial {
+            border-radius: 3px;
+            background: #FFFFFF;
+            color: #000;
 
-//   background-color: #f7f7f7;
-//     border: 1px solid #dddddd;
-//     border-radius: 12px;
-//     color: #333;
-//     padding-left: 20px;
-//     padding-top: 5px;
-//     padding-bottom: 5px;
-// }
+        }
 
+.background {
+    fill: red;
+    fill-opacity: 0.01;
+}
 
-// .label {
-//     font-family: 'Josefin Sans', sans-serif;
-//     text-anchor: middle;
+.component {
+    fill: #e1e1e1;
 
-// }
+}
 
-// .radial-svg {
-//     display: block;
-//     margin: 0 auto;
-//     margin-bottom:20px;
-//     padding-left: 10px;
-// }
+.component .label {
+    font-family: 'Josefin Sans', sans-serif;
+    text-anchor: middle;
+    fill: #333;
+    font-size: 15px;
+}
 
-// #chart{
-//     background-color: #fbfbfb;
-// }
-// .label2 {
-//     font-family: 'Josefin Sans', sans-serif;
-//     fill: #fbfbfb;
-//     font-size: 10px;
-
-// }
-// .label3 {
-//     font-family: 'Josefin Sans', sans-serif;
+.arc {
+    stroke-weight:0.1;
+    fill: #333;
 
 
-// }
-// .wtf{
-//     fill: #e1e1e1;
-// }
+}
+
+.phrase{
+
+  background-color: #f7f7f7;
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+    color: #333;
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
+.label {
+    font-family: 'Josefin Sans', sans-serif;
+    text-anchor: middle;
+
+}
+
+.radial-svg {
+    display: block;
+    margin: 0 auto;
+    margin-bottom:20px;
+    padding-left: 10px;
+}
+
+#chart{
+    background-color: #fbfbfb;
+}
+.label2 {
+    font-family: 'Josefin Sans', sans-serif;
+    fill: #fbfbfb;
+    font-size: 10px;
+
+}
+.label3 {
+    font-family: 'Josefin Sans', sans-serif;
+
+
+}
+.wtf{
+    fill: #e1e1e1;
+}
