@@ -25,7 +25,7 @@
 
 function radialProgress(parent) {
     var _data=null,
-        _duration= 1000,
+        _duration= 1300,
         _selection,
         _margin = {top:0, right:0, bottom:30, left:0},
         __width = 300,
@@ -261,7 +261,7 @@ function skills2()
 {
 
     var data =[
-          {value: 75, skill: 'Ruby on Rails'},
+          {value: 80, skill: 'Ruby on Rails'},
           {value: 75, skill: 'Javascript'},
           {value: 90, skill: 'CSS'},
           {value: 95, skill: 'HTML'},
@@ -303,7 +303,7 @@ function skills2()
   bar.append("rect")
 
       .attr("height", h-10)
-      .transition().delay(function (d,i){ return i * 100;})
+      .transition().delay(function (d,i){ return i * 130;})
       .duration(1000)
       .attr("width", function(d,i){ return (barW/100)*(d.value)});
 
@@ -315,7 +315,7 @@ function skills2()
 
   bar.append("text")
       .attr("dy", "1.3em")
-    .transition().delay(function (d,i){ return i * 100;}).duration(1100)
+    .transition().delay(function (d,i){ return i * 130;}).duration(1100)
     .attr("dx", function(d,i ){
       if(d.value == 100){return (barW/100)*(d.value)-25} else {return (barW/100)*(d.value)-20}})
       .attr("class", "label2")

@@ -6,8 +6,21 @@
 
 body{
   background-color: #fbfbfb;
+  color: #111;
+}
+footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.7);
+
 }
 
+footer p{
+  color: #fbfbfb;
+  font-size: 16px;
+
+}
 .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
 
 .italify{
@@ -16,6 +29,25 @@ body{
 
 .header{
   height: 150px;
+}
+
+.header-image{
+      height: 80px;
+    float: left;
+    margin-left: 40px;
+    margin-top: 30px;
+    border-radius: 50px;
+    margin-right: 32px;
+}
+.fade-header{
+  height: 150px;
+  background: rgba(0,0,0,0.6);
+}
+
+
+
+.test{
+  background-image: image-url("photonyc.jpeg");
 }
 .top-menu-el{
 
@@ -44,13 +76,43 @@ body{
 
 }
 
+.top-menu-el-fade-header{
+
+  // font-family: 'Arimo', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;
+  color: #fbfbfb;
+  font-size: 14px;
+  line-height: 3.2em;
+  letter-spacing: 2px;
+  font-style: normal;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.top-menu-el-fade-header:hover{
+
+  background-image: linear-gradient(
+        180deg, rgba(0,0,0,0),
+        rgba(0,0,0,0) 81%,
+        #fbfbfb 81.1%,
+        #fbfbfb 85%,
+        rgba(0,0,0,0) 85.1%,
+        rgba(0,0,0,0)
+    );
+    text-decoration: none;
+
+}
+
 .top-title{
   font-family: 'Josefin Sans', sans-serif;
   letter-spacing: 0.289474em;
   font-size: 33px;
-  color: #111;
-}
+  color: #fbfbfb;
 
+}
+.t2{
+    color: #333;
+  }
 .content-title
 {
   font-family: 'Open Sans', sans-serif;
@@ -84,6 +146,7 @@ body{
 .content-normal{
   margin-top: 3px;
   margin-bottom: 35px;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .location{
@@ -150,7 +213,9 @@ body{
 
 
 }
-
+.invisible{
+  display: none;
+}
 .phrase{
 
   background-color: #f7f7f7;
@@ -192,4 +257,44 @@ body{
 }
 .wtf{
     fill: #e1e1e1;
+}
+
+#tooltip{
+        margin-top: 150px;
+        margin-left: -10px;
+    width: 110px;
+    border-radius: 3px;
+    background-color: #333;
+    color: #bbb;
+    padding: 3px;
+    font-size: 12px;
+    text-align: center;
+
+}
+
+
+.arrow_box {
+  position: relative;
+
+}
+.arrow_box:after, .arrow_box:before {
+  right: 100%;
+  top: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.arrow_box:after {
+  border-color: rgba(89, 213, 155, 0);
+  border-right-color: #333;
+  border-width: 5px;
+  margin-top: -5px;
+  margin-left: -3px;
+}
+.arrow_box:before {
+
 }

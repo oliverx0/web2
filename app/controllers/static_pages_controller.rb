@@ -1,6 +1,8 @@
 class StaticPagesController < ApplicationController
 
-  def home
+  def resume
+  end
+  def projects
   end
   def test
   end
