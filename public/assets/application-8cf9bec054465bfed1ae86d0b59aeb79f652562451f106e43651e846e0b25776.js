@@ -23603,7 +23603,7 @@ function skills2()
 
     "use strict";
 
-    // var Animations = UI.slideshow.animations;
+    var Animations = UI.slideshow.animations;
 
     UI.$.extend(UI.slideshow.animations, {
         'slice': function(current, next, dir, fromfx) {

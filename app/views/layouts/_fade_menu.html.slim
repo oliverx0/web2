@@ -1,6 +1,6 @@
 div.uk-grid.uk-width-2-5.uk-margin-large-top
   div.uk-width-1-6.uk-center
-    a.top-menu-el-fade-header(href="/resume") Resume
+    = link_to "Resume", resume_path, 'data-no-turbolink' => true, class: "head top-menu-el-fade-header"
   div.uk-width-1-6.uk-center
     p.top-menu-el-fade-header About
   div.uk-width-1-6.uk-center

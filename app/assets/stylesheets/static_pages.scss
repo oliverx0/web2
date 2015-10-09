@@ -15,6 +15,59 @@ footer{
   background: rgba(0,0,0,0.7);
 
 }
+figure.portfolio{
+  background-color: #fafafa;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+}
+figure:hover{
+  box-shadow: 0px 0px 14px -1px rgba(0,0,0,0.75) !important;
+  cursor: pointer;
+}
+
+figure.about{
+  border-radius: 80px;
+}
+figcaption.portfolio{
+
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+figcaption.about{
+  border-radius: 80px;
+
+}
+
+.photo{
+
+  width: 85px;
+  height: 75px;
+  background-color: #fafafa;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+}
+
+
+.photo-big{
+  width: 205px;
+  height: 145px;
+}
+
+.inactive{
+
+  opacity: 0.7;
+}
+
+.active
+{
+  box-shadow: 0px 0px 14px -1px rgba(0,0,0,0.75);
+}
+
+a.head:hover{
+
+  color: #fbfbfb !important;
+}
 
 footer p{
   color: #fbfbfb;
@@ -30,14 +83,21 @@ footer p{
 .header{
   height: 150px;
 }
+.highlights li{
 
+  padding-bottom: 7px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 7px;
+    font-size: 12px;
+}
+
+.highlights li:last-child{
+    border-bottom: 0px solid #ccc;
+}
 .header-image{
-      height: 80px;
-    float: left;
-    margin-left: 40px;
-    margin-top: 30px;
-    border-radius: 50px;
-    margin-right: 32px;
+      height: 150px;
+    border-radius: 90px;
+
 }
 .fade-header{
   height: 150px;
