@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  get '*path' => redirect('/')   unless Rails.env.development?
+
 
   root 'static_pages#home'
 
@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   get 'projects2' => 'static_pages#projects2'
   get 'home' => 'static_pages#home'
   get 'about' => 'static_pages#about'
-
+  get '*path' => redirect('/')   unless Rails.env.development?
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
