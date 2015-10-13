@@ -6,38 +6,99 @@ div(style="position: relative")
   div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
     div.uk-width-1-6
 
-    div.uk-width-3-6(style="margin-left: -50px")
-      h1.content-title.project
-        | PROJECTS /
-        strong = " PALLETTE"
-      h2(style="margin-bottom: 30px") The tongue-computer interface
-
-
-      p.content-normal.justify Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left
-      p.content-normal.justify Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left
-      p.content-normal.justify Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left Welcome! This portfolio showcases some of my most interesting projects. Click an image on the left
-
-
+    div.uk-width-5-6
+      h1.content-title
+        b PORTFOLIO
 
       div.uk-margin-large-top
+      ul.uk-grid-1-1.uk-thumbnav
+        li = link_to projects_pallette_path, 'data-no-turbolink' => true
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/project_show.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Pallette
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+
+        li
+          figure.portfolio.uk-overlay.uk-overlay-hover
+            = image_tag("thumbnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+        / li
+        /   figure.portfolio.uk-overlay.uk-overlay-hover
+        /     = image_tag("https://images.unsplash.com/photo-1441742917377-57f78ee0e582?q=80&fm=jpg&s=a79e8a2beba8b3a1ad251798a9024d8b", :alt => "rss feed", class: "photo-big")
+        /     figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Test
+        / li
+        /   figure.portfolio.uk-overlay.uk-overlay-hover
+        /     = image_tag("https://images.unsplash.com/photo-1441716844725-09cedc13a4e7?q=80&fm=jpg&s=c895a1f219d174952415b9b7a0811e62", :alt => "rss feed", class: "photo-big")
+        /     figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Test
+        / li
+        /   figure.portfolio.uk-overlay.uk-overlay-hover
+        /     = image_tag("https://images.unsplash.com/photo-1441742917377-57f78ee0e582?q=80&fm=jpg&s=a79e8a2beba8b3a1ad251798a9024d8b", :alt => "rss feed", class: "photo-big")
+        /     figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Test
 
 
-    div.uk-width-2-6
-      div.uk-grid-1-1
-        div(style="background-color: #eee;
-      max-width: 180px;
-      border-radius: 8px;
-      margin-left: 65px;
-      margin-top: 58px;")
-          p(style="padding: 5px;
-      color: #999;
-      padding-left: 20px;") Project Image Gallery
-      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
-      padding-bottom: 10px; padding-left: 35px;
-      margin-top: 20px;")
-        li = image_tag("https://images.unsplash.com/photo-1441716844725-09cedc13a4e7?q=80&fm=jpg&s=c895a1f219d174952415b9b7a0811e62", :alt => "rss feed", class: "photo inactive")
-        li = image_tag("https://images.unsplash.com/photo-1441742917377-57f78ee0e582?q=80&fm=jpg&s=a79e8a2beba8b3a1ad251798a9024d8b", :alt => "rss feed", class: "photo inactive")
 
-        li = image_tag("https://images.unsplash.com/photo-1441716844725-09cedc13a4e7?q=80&fm=jpg&s=c895a1f219d174952415b9b7a0811e62", :alt => "rss feed", class: "photo active")
-        li = image_tag("https://images.unsplash.com/photo-1441742917377-57f78ee0e582?q=80&fm=jpg&s=a79e8a2beba8b3a1ad251798a9024d8b", :alt => "rss feed", class: "photo inactive")
+
+    div.uk-width-1-6
+
 

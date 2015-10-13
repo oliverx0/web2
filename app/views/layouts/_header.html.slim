@@ -1,25 +1,20 @@
 // Main Header
-/ div.uk-cover-background(style="background-image: url('https://s3-us-west-2.amazonaws.com/ojh22/test2-result.jpg'); margin-bottom: 80px")
-/   div.uk-grid.header(style="margin-bottom: 35px; background: rgba(0,0,0,0.6);")
-/     div.uk-width-3-5
-/       h1.top-title.uk-margin-large-top.uk-margin-large-left
-/         b OLIVER HOFFMAN
-
-/     = render 'layouts/fade_menu'
 div(style="    height: 150px;
     overflow: hidden;
     margin-bottom: 80px;")
-
-  div.uk-width-1-1(style="z-index: 10000; position: absolute")
-    div.uk-grid.fade-header(style="margin-bottom: 35px")
-      div.uk-width-3-5
-        h1.top-title.uk-margin-large-top.uk-margin-large-left
-          b OLIVER HOFFMAN
-
-      = render 'layouts/fade_menu'
-
-  ul(style="float: left; z-index: 2000" class="uk-slideshow" data-uk-slideshow="{autoplay:true, animation: 'fade', kenburns: true, autoplayInterval: 6000, duration: 2000}")
+  ul( class="uk-slideshow" data-uk-slideshow="{autoplay:true, animation: 'fade', kenburns: true, autoplayInterval: 6000, duration: 2000}")
       / li = image_tag("photonyc.jpeg", :alt => "rss feed")
       / li = image_tag("munich.jpeg", :alt => "rss feed")
       li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/test2-result.jpg", :alt => "rss feed")
       li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/test3-result.jpg")
+  div.uk-width-1-1(style="position: absolute;
+    top: 0;
+    height: 150px;
+    background-color: rgba(0,0,0,0.6);")
+    h1.top-title.uk-margin-large-top.uk-margin-large-left(style="float: left")
+      b OLIVER HOFFMAN
+
+    = render 'layouts/fade_menu'
+
+
+

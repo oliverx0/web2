@@ -6,7 +6,7 @@ class StaticPagesController < ApplicationController
   end
   def test
   end
-  def projects2
+  def pallette
   end
 
   def about

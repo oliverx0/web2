@@ -8,6 +8,10 @@ body{
   background-color: #fbfbfb;
   color: #111;
 }
+
+img{
+  z-index: 99999;
+}
 footer{
   position: fixed;
   bottom: 0;
@@ -78,9 +82,24 @@ figcaption.about{
   color: #bbb !important;
 }
 
-.project:hover{
-  color: #5B92AF !important;
+.project a{
 
+  text-decoration: none;
+  color: inherit;
+}
+
+
+.third-title{
+  font-size: 20px;
+}
+.project a:hover{
+
+  text-decoration: none;
+  color: #5B92AF !important;
+}
+
+a.blue_link{
+  color: #5B92AF !important;
 }
 
 h1 strong{

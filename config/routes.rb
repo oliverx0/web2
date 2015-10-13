@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   # Example of regular route:
   get 'resume' => 'static_pages#resume'
   get 'projects' => 'static_pages#projects'
-  get 'projects2' => 'static_pages#projects2'
+  get 'projects/pallette' => 'static_pages#pallette'
   get 'home' => 'static_pages#home'
   get 'about' => 'static_pages#about'
   get '*path' => redirect('/')   unless Rails.env.development?
