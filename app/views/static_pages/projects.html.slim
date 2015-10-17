@@ -20,10 +20,10 @@ div(style="position: relative")
           figure.portfolio.uk-overlay.uk-overlay-hover
             = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Morse+Code+Display/project_show.jpg", class: "photo-big")
             figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Morse Code Display
-        li
+        li = link_to ios_path, 'data-no-turbolink' => true
           figure.portfolio.uk-overlay.uk-overlay-hover
-            = image_tag("thumbnail.jpg", class: "photo-big")
-            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Hello my name is Oliver and this is a test
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev6_thubnail.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top iOS Dev Tour
 
         li
           figure.portfolio.uk-overlay.uk-overlay-hover

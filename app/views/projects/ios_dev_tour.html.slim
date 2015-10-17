@@ -1,0 +1,85 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " iOS DEV TOUR"
+      h2(style="margin-bottom: 30px") Showcasing the basic functionalities in iOS Development
+
+
+      p.content-normal.justify This project served as the final submission for the Introduction to iOS Development class taken at Cornell Tech. It is a very simple app which walks the user through the different types of interfaces and functionalities explored throughout the course.
+
+      p.content-normal.justify In the first screen the user can select one of the three tabs available from the Tabs Controller. The first one will take him through basic elements such as UIButtons, UISliders, UITextFields, etc. In the final screen it shows a table displaying the results of the user's input, stored in NSUserDefaults. The second screen is a simple UIWebView, which loads by default the link to Google's home page. The third screen implements a Gesture Recognizer, by which the user can move around the cursor in the screen and it will change its background color based on the x and y coordinates.
+
+      h3.content-title
+            b.second-title.third-title Basic requirements met
+
+      ul.content-normal.single-spacing.justify
+        li Includes at least 4 screens
+        li Includes different types of transitions (modal and push via UINavigation)
+        li Includes a table view
+        li Includes 5 different kinds of UI elements (UILabel, UIWebView, UIButton, UISlider, UITable)
+        li Uses the storyboard feature in XCode
+        li Includes a Gesture Recognizer
+        li Uses NSUserDefaults as storage for user's input
+        li Runs in the simulator
+
+      h3.content-title
+            b.second-title.third-title Code sample
+
+      pre(class="brush: cpp")
+        = File.open("#{Rails.root}/public/data/ios_dev_tour.txt", 'rb') { |f| f.read }
+
+      div.uk-margin-large-top
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev1.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="Initial screen")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev1_thumbnail.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev2.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="Button enabled")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev2_thumbnail.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev3.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="Using UISliders for input")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev3_thumbnail.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev4.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="Error handling")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev4.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev5.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="UITable View")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev5.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev6.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="UIWeb View")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev6_thubnail.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev7.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="Gesture Recognizer")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev7_thumbnail.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev8.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="Gesture Recognizer in Action")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev8_thumbnail.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev9.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image" title="Development Environment")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/iOS/dev9_thumbnail.jpg", :alt => "rss feed", class: "photo-2 height-long")
+
+
+
+javascript:
+  SyntaxHighlighter.all()

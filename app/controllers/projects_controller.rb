@@ -5,4 +5,7 @@ class ProjectsController < ApplicationController
   def morse_code_display
   end
 
+  def ios_dev_tour
+  end
+
 end

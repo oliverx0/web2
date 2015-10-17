@@ -54,11 +54,16 @@ figcaption.about{
 
 .photo-2{
       width: 130px;
-    height: 95px;
+    height: 85px;
     background-color: #fafafa;
     border: 1px solid #bbb;
     border-radius: 5px;
-    margin-bottom: 5px;
+
+}
+
+.height-long{
+
+  height: 100px;
 }
 
 
@@ -97,7 +102,10 @@ figcaption.about{
   color: inherit;
 }
 
+.single-spacing li{
 
+  margin-bottom: 10px !important;
+}
 .third-title{
   font-size: 20px;
 }

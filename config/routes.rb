@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   get 'projects/pallette' => 'projects#pallette'
   get 'projects/morse_code_display' => 'projects#morse_code_display'
+  get 'projects/ios_dev_tour' => 'projects#ios_dev_tour', as: 'ios'
+
 
   get '*path' => redirect('/')   unless Rails.env.development?
   # Example of named route that can be invoked with purchase_url(id: product.id)

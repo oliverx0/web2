@@ -1,0 +1,98 @@
+//
+//  ThirdViewController.m
+//  Test2
+//
+//  Created by Oliver Hoffman on 10/5/15.
+//  Copyright © 2015 Oliver Hoffman. All rights reserved.
+//
+
+#import "ThirdViewController.h"
+@interface ThirdViewController ()
+@property (weak, nonatomic) IBOutlet UITextField *entry1TextFIeld;
+@property (weak, nonatomic) IBOutlet UITextField *entry2TextField;
+@property (weak, nonatomic) IBOutlet UISlider *entry1Selector;
+@property (weak, nonatomic) IBOutlet UISlider *entry2Selector;
+@property NSMutableArray *entriesArray;
+
+@end
+
+@implementation ThirdViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    self.entriesArray = [[NSMutableArray alloc] init];
+}
+- (IBAction)buttonSaveAndGo:(id)sender {
+
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([self verifyEntries])
+    {
+        [self saveVals];
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+-(void)saveVals{
+    NSArray *entry = @[self.entry1TextFIeld.text, [NSString stringWithFormat: @"%f", (float)self.entry1Selector.value]];
+
+    [self.entriesArray addObject:entry];
+    entry = @[self.entry2TextField.text, [NSString stringWithFormat: @"%f", (float)self.entry2Selector.value]];
+
+    [self.entriesArray addObject:entry];
+
+    [[NSUserDefaults standardUserDefaults] setObject:self.entriesArray forKey:@"entries"];
+
+}
+- (IBAction)saveAndGo:(id)sender {
+//    NSMutableArray *array = [[NSUserDefaults standardUserDefaults] objectForKey:@"entries"];
+
+}
+
+- (BOOL) verifyEntries{
+
+    // Initialize the borders of UITextfields to default
+    [self.entry1TextFIeld.layer setBorderColor:[[[UIColor clearColor] colorWithAlphaComponent:0.5] CGColor]];
+    self.entry1TextFIeld.layer.borderWidth= 0.5f;
+
+
+    [self.entry2TextField.layer setBorderColor:[[[UIColor clearColor] colorWithAlphaComponent:0.5] CGColor]];
+    self.entry2TextField.layer.borderWidth= 0.5f;
+
+
+    // Retrieve string values of UITextfields
+    NSString *entry1 = [self.entry1TextFIeld.text stringByTrimmingCharactersInSet:
+                      [NSCharacterSet whitespaceCharacterSet]];
+
+    NSString *entry2 = [self.entry2TextField.text stringByTrimmingCharactersInSet:
+                        [NSCharacterSet whitespaceCharacterSet]];
+
+    // Check values and change border color to red
+    if([entry1 isEqualToString:@""])
+    {
+        [self.entry1TextFIeld.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+        self.entry1TextFIeld.layer.borderWidth= 1.0f;
+        return false;
+    }else if([entry2 isEqualToString:@""])
+    {
+        [self.entry2TextField.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+        self.entry2TextField.layer.borderWidth= 1.0f;
+        return false;
+    }
+
+    return true;
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end
