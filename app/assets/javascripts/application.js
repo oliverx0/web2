@@ -15,6 +15,8 @@
 //= require turbolinks
 //= require uikit
 //= require d3
+//= require syntax-highlighter-rails/shCore
+//= require syntax-highlighter-rails/shBrushCpp
 //= require_tree .
 
 

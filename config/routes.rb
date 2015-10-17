@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'projects/pallette'
+
   get 'static_pages/home'
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -12,9 +14,12 @@ Rails.application.routes.draw do
   # Example of regular route:
   get 'resume' => 'static_pages#resume'
   get 'projects' => 'static_pages#projects'
-  get 'projects/pallette' => 'static_pages#pallette'
   get 'home' => 'static_pages#home'
   get 'about' => 'static_pages#about'
+
+  get 'projects/pallette' => 'projects#pallette'
+  get 'projects/morse_code_display' => 'projects#morse_code_display'
+
   get '*path' => redirect('/')   unless Rails.env.development?
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase

@@ -1,0 +1,101 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " MORSE CODE DISPLAY"
+      h2(style="margin-bottom: 30px") An Arduino-based Morse Code Display
+
+
+      p.content-normal.justify This project was done with my classmates Joanna Zhang, Rishav Kanoria, and Daniel Safdie. The objective was the exploration of hardware as a mechanism for receiving inputs and outputs, while understanding how the transfer of information and electronic components setups work. In that sense, we put together a button, an Arduino Fio microcontroller and a LED display to receive a digit from 0 to 9 in Morse code (by tapping the button) and showing the corresponding digit in the display. Depending on the amount of time the user pressed the button, it would be interpreted as a dot or a line.
+      / You can learn more about pallette #{link_to 'here', 'http://web.pallette.us', class: 'blue_link'} and #{link_to 'here', 'http://http://devpost.com/software/pallette', class: 'blue_link'}.
+
+      p.content-normal.justify Since the Arduino Fio did not have enough output PINs to show the results in the LED display, we also used a shift register to expand the number of output PINs available.
+
+      h3.content-title
+            b.second-title.third-title Software Description
+
+      p.content-normal.justify The basic components of the software are:
+
+      ul.content-normal.justify
+        li Global variables that hold information about the different PINs that are connected directly to the Arduino, a digits array that contains the Morse code representation for the numbers 0 - 9, and helper variables that control the timing to receive input (these include short_time, which indicates the time the user needs to press and hold the button to send a dot, and long_time, which indicates the time the user needs to press and hold the button to send a dash).
+
+        li A setup function in which we we simply indicate the different PINs that will be used as inputs and outputs.
+
+        li A loop function which:
+
+        ul
+          li Reads the button input on every iteration, and determines whether the input is a dot, a dash, or neither. If it is either a dot or a dash, it will be appended to the button_reading string.
+
+          li Regarding the debouncing and variations in timing of the user input, our logic is very simple: when the button is pressed and released, we check how long it was pressed, if it was pressed for an amount of time greater than long_time, then we read a dash; if it was pressed for an amount of time shorter than long-time but greater than short_time, then we read a dot. If it was not pressed long enough for short_time, then we don’t read anything. This is better than having to tap the button 3 times to represent a line, since it leads to less error.
+
+          li When the button_reading string is of length five, it is compared to the different possible entries in the digits array. If it matches, then the function displayDigit is called (which displays a digit in the LED display). Otherwise, the button_reading is emptied. This is how we manage user mistakes: if after 5 inputs the value is invalid, we simply start over.
+
+          li The displayDigit function receives a digit from 0 to 9. On each case, it starts an infinite loop that shows the corresponding digit on the LED display by calling the SendData function repeatedly. In order to introduce a new input, the reset button on the Arduino must be pressed.
+
+          li The sendData function is the one in charge of turning the LED display on. Since it can only turn on LEDs in one column at a time, we call it repeatedly to turn on the next column in sequence very quickly, amking it seem as if all the LEDs corresponding to the digit were turned on at the same time. To turn the display on, it receives a string of bits that indicate what output PINs in the shift register will be turned LOW or HIGH. At the same time, since some of the PINs in the LED display are connected directly to the Arduino, it also receives the LOW / HIGH value for each of those. It is worth noting that this function uses the Arduino’s shiftOut function to send data to the shift register (the CLOCK, STROBE and OUTPUT_ENABLED PINs are set correctly before calling such function).
+
+
+      h3.content-title
+            b.second-title.third-title References
+
+      ul.justify
+        li = link_to 'Arduino Button Tutorial', 'https://www.arduino.cc/en/Tutorial/Button', class: 'blue_link', target: '_blank'
+
+        li = link_to 'Arduino ShiftOut Reference', 'https://www.arduino.cc/en/Tutorial/ShiftOut', class: 'blue_link', target: '_blank'
+
+        li = link_to 'Arduino ShiftOut Tutorial', 'https://www.arduino.cc/en/Reference/ShiftOut', class: 'blue_link', target: '_blank'
+
+        li = link_to 'Shift Register Wikipedia Article', 'https://en.wikipedia.org/wiki/Shift_register', class: 'blue_link', target: '_blank'
+
+        li = link_to 'LED Dot Matrix Register Datasheet', 'http://www.jameco.com/Jameco/Products/ProdDS/2005497.pdf', class: 'blue_link', target: '_blank'
+
+        li = link_to 'Morse Code Reference', 'http://en.wikipedia.org/wiki/Morse_code', class: 'blue_link', target: '_blank'
+
+        li = link_to 'Serial Input for Arduino Reference', 'https://www.arduino.cc/en/Serial/Read', class: 'blue_link', target: '_blank'
+
+      h3.content-title
+            b.second-title.third-title Code sample
+
+      pre(class="brush: cpp")
+        = File.open("#{Rails.root}/public/data/morse_code_display.txt", 'rb') { |f| f.read }
+
+
+
+
+
+      div.uk-margin-large-top
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://youtu.be/PPoUKl2Xhwo" data-uk-lightbox="{group:'my-group'}" title="Video Showcasing Functionality" data-lightbox-type="image")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Morse+Code+Display/video_thumbnail.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Morse+Code+Display/dev1.jpg" data-uk-lightbox="{group:'my-group'}" title="Example Setup (not the one used by my team)")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Morse+Code+Display/project_show.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Morse+Code+Display/dev2.jpg" data-uk-lightbox="{group:'my-group'}" title="Schematic")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Morse+Code+Display/dev2_thumbnail.jpg", :alt => "rss feed", class: "photo-2")
+
+
+
+javascript:
+  SyntaxHighlighter.all()

@@ -1,0 +1,104 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " PALLETTE"
+      h2(style="margin-bottom: 30px") Tongue control for the mobility impaired
+
+
+      p.content-normal.justify Pallette is an ongoing project with my friends Dan Levine, Shawn Bramson, and Rohit Jain. You can learn more about pallette #{link_to 'here', 'http://web.pallette.us', class: 'blue_link'} and #{link_to 'here', 'http://http://devpost.com/software/pallette', class: 'blue_link'}.
+
+      p.content-normal.justify We envision a tongue interface capable of controlling technology to enable more independent living. Currently quadriplegics do not have a mobile, discreet method of finely controlling the technology used in their daily lives. The tongue is one of the most sensitive and versatile muscles in the body, it is also concealed within the mouth. Though previous attempts of using the tongue as an interface for technology exist, none of them have succeeded in achieving a comfortable and lasting experience for the users while enabling control of multiple technologies.
+
+      p.content-normal.justify Specifically for our project we have created Pallette, a tongue-controlled wireless device that fits in the mouth of the user and connects to a mobile phone through an app that we have developed. This app will act as hub to which other devices can connect to via bluetooth, allowing the user to select which device to control via Pallette.
+
+      h3.content-title
+            b.second-title.third-title Technology at the tip of your tongue
+
+      p.content-normal.justify The first version of Pallette was designed behind the idea of a computer mouse: a trackpoint which allows navigation and direction and 2 buttons that can be clicked to indicate commands. It could then be connected to any device compatible with Blueetooth technology through the mobile app. These devices would each have their own configuration as to how to interpret the signals from the trackpoint and buttons in order to perform different actions.
+
+      p.content-normal.justify We are currently exploring new design methods using proximity sensors to identify tongue movement. This reduces the size of the device considerably and has the added value of not considering the tongue as a finger - it is after all much more complex than that.
+
+      h3.content-title
+            b.second-title.third-title A universal interface to interact with technology
+
+      p.content-normal.justify By achieving a strong tongue interface we can extrapolate control to multiple devices including motorized wheelchair control, video games, thermostats, lighting, and so much more. Specifically, the increased interconnectivity expected to take place with the smart homes of the future and the trend of Internet of Things will bring about more connectivity between physical and digital world. Pallette taps into this and provides quadriplegics with access to all of these devices.
+
+
+
+      div.uk-margin-large-top
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://youtu.be/N2t5dFoGozY" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/project_show.jpg", :alt => "rss feed", class: "photo")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev1.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev1_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev2.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev2_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev3.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev3_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev4.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev4_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev5.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev5_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev6.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev6_thmbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev7.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev7_thmbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev8.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev8_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev9.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev9_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev11.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev11_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev12.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev12_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev13.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev13_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev14.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev14_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev15.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev15_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev16.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev16_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev17.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev17_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev19.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Pallette+Images/dev19_thumbnail.jpg", :alt => "rss feed", class: "photo")
+
