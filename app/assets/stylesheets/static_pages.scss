@@ -29,6 +29,11 @@ figure:hover{
   cursor: pointer;
 }
 
+figure.nothing:hover{
+  box-shadow: none !important;
+  cursor: default;
+}
+
 figure.about{
   border-radius: 80px;
 }
@@ -37,7 +42,9 @@ figcaption.portfolio{
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
 }
-
+tbody tr th{
+  font-weight: normal !important;
+}
 figcaption.about{
   border-radius: 80px;
 

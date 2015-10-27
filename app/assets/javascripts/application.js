@@ -17,6 +17,7 @@
 //= require d3
 //= require syntax-highlighter-rails/shCore
 //= require syntax-highlighter-rails/shBrushCpp
+//= require syntax-highlighter-rails/shBrushPython
 //= require_tree .
 
 

@@ -8,4 +8,7 @@ class ProjectsController < ApplicationController
   def ios_dev_tour
   end
 
+  def terrorist_attacks_model
+  end
+
 end
