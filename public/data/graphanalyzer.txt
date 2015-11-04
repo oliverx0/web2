@@ -1,0 +1,132 @@
+
+public void AnalyzeXML(String filename, boolean weighted)
+  {
+    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder docBuilder = null;
+
+    try {
+
+      //Open XML file
+      docBuilder = docBuilderFactory.newDocumentBuilder();
+      Document doc = docBuilder.parse (new FileInputStream(filename+".xml"));//Document doc = docBuilder.parse (new File("C:/Users/Oliver/Desktop/xmlTasks/src/xml/flotaCamiones.xml"));
+
+      //Normalize it
+      doc.getDocumentElement().normalize();
+
+      //Get Nodes
+      NodeList NodesList = doc.getElementsByTagName("node");
+      int node_count = NodesList.getLength();
+
+
+      for(int i = 0; i < node_count; ++i)
+      {
+        Element GraphNode = (Element) doc.getElementsByTagName("node").item(i);
+        NodeMap.put(GraphNode.getAttribute("id").toString(), i);
+        NodeNames.add(GraphNode.getAttribute("id").toString());
+        adjacency_matrix.add(new ArrayList<Double>());
+        for (int j = 0; j < node_count; ++j)
+        {
+          if(i != j)
+          {
+            adjacency_matrix.get(i).add(0.0);
+          }
+          else
+          {
+            // This indicates that a node is connected to itself
+            adjacency_matrix.get(i).add(1.0);
+          }
+
+        }
+      }
+
+      //Get Links
+      NodeList LinkNodes = doc.getDocumentElement().getChildNodes().item(1).getChildNodes().item(3).getChildNodes().item(1).getChildNodes();
+      int num_links = LinkNodes.getLength();
+
+      int temp = 0;
+      for (int i = 0; i < num_links; i++)
+      {
+        Node nNode = LinkNodes.item(i);
+        if (nNode.getNodeType() == Node.ELEMENT_NODE && nNode.getNodeName().equals("link"))
+        {
+          temp++;
+          Element LinkNode = (Element) nNode;
+          int source = NodeMap.get(LinkNode.getAttribute("source").toString());
+          int target = NodeMap.get(LinkNode.getAttribute("target").toString());
+          double value = Double.parseDouble(LinkNode.getAttribute("value").toString());
+
+          if(value > 0)
+          {
+            if(weighted)
+              adjacency_matrix.get(source).set(target, value);
+            else
+              adjacency_matrix.get(source).set(target, 1.0);
+
+            if(source < target)
+            {
+              WeightedLink link = new WeightedLink();
+              link.source = source;
+              link.target = target;
+              link.value = value;
+              WeightedLinksList.add(link);
+            }
+          }
+        }
+      }
+
+    }catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  public void GenerateJSON(String filename, boolean community)
+  {
+    try
+    {
+      JsonObject mainObj = new JsonObject();
+      JsonArray nodes = new JsonArray();
+      JsonArray links = new JsonArray();
+
+      for(String key : NodeMap.keySet())
+      {
+        //Objeto Nodos
+        JsonObject jo = new JsonObject();
+        jo.addProperty("name", key);
+        if(community)
+        {
+          int comm_key = NodeMap.get(key);
+          int group = CommunityMap.get(comm_key);
+          jo.addProperty("group", group);
+        }
+        nodes.add(jo);
+      }
+
+      for(int i = 0; i < WeightedLinksList.size(); ++i)
+      {
+        WeightedLink link = WeightedLinksList.get(i);
+        JsonObject jo = new JsonObject();
+        jo.addProperty("source", link.source);
+        jo.addProperty("target", link.target);
+        jo.addProperty("value", link.value);
+        links.add(jo);
+      }
+
+      mainObj.add("nodes", nodes);
+      mainObj.add("links", links);
+
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      JsonParser jp = new JsonParser();
+      JsonElement je = jp.parse(mainObj.toString());
+      String prettyJsonString = gson.toJson(je);
+
+      FileWriter file = new FileWriter(filename+".json");
+      file.write(prettyJsonString);
+      file.flush();
+      file.close();
+
+    }catch(Exception e)
+    {
+      e.printStackTrace();
+    }
+  }

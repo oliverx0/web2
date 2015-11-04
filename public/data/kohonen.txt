@@ -1,0 +1,70 @@
+
+
+
+//Constructor
+public KohonenNetwork(int Num_Ent, int x)
+{
+    ninput = Num_Ent;
+    nx = x;
+    ny = x;
+    kohonenLayer = new Neuron[ny][nx];
+
+    //The network takes the default values
+    EtaIni = (float) DefaultValuesSOM.DEFAULT.ETAIN;
+    EtaFin = (float) DefaultValuesSOM.DEFAULT.ETAFIN;
+    EtaShrink = (float) DefaultValuesSOM.DEFAULT.ETASHRINK;
+    curve = DefaultValuesSOM.DEFAULT.CURVE;
+    iterations = DefaultValuesSOM.DEFAULT.ITERATIONS;
+    iterationsExpansion = DefaultValuesSOM.DEFAULT.ITER_EXTENSION;
+    useReinforcement = DefaultValuesSOM.DEFAULT.REINFORCEMENT;
+    reinforcements = DefaultValuesSOM.DEFAULT.REINFORCEMENTNUM;
+    initialNeighborhood = nx;
+    sampleDistribution = DefaultValuesSOM.DEFAULT.SAMPLE_DISTRIBUTION;
+    normalizationType = DefaultValuesSOM.DEFAULT.NORMALIZATION;
+
+    //random weight initialization
+    for(int i = 0; i < ny; ++i)
+    {
+      for(int j = 0; j < nx; ++j)
+      {
+        kohonenLayer[i][j] = new Neuron();
+        kohonenLayer[i][j].initializeWeights(ninput);
+        kohonenLayer[i][j].setFrequency (1.0 / (nx * ny));
+
+            // A random, normalized sample is created and assigned to the
+        // current weight
+
+         SampleStructure m = new SampleStructure();
+         m.initializeData(ninput);
+         for(int k = 0; k < ninput; ++k)
+         {
+           m.setDataPoint(k, DefaultValuesSOM.randomized());
+         }
+
+         m.normalize();
+
+         for(int k = 0; k < ninput; ++k)
+         {
+           kohonenLayer[i][j].setWeight(k, m.getDataPoint(k));
+         }
+      }
+
+    }
+    System.out.println("Kohonen Network Initalized Correctly!");
+}
+
+
+public void FindCommunities(int kohonen_layer_side)
+{
+
+    List<SampleStructure> Samples = GenerateSamples();
+    KohonenNetwork kohonen = new KohonenNetwork(getNumberNodes(), kohonen_layer_side);
+    kohonen.Train(Samples, getNumberNodes());
+    List<ClassificationResults> Results = kohonen.Classify(Samples);
+    for (int i = 0; i < Results.size(); ++i)
+    {
+        CommunityMap.put(NodeMap.get(Results.get(i).node_label), Results.get(i).class_id);
+    }
+}
+
+

@@ -11,4 +11,7 @@ class ProjectsController < ApplicationController
   def terrorist_attacks_model
   end
 
+  def online_communities
+  end
+
 end

@@ -18,6 +18,8 @@
 //= require syntax-highlighter-rails/shCore
 //= require syntax-highlighter-rails/shBrushCpp
 //= require syntax-highlighter-rails/shBrushPython
+//= require syntax-highlighter-rails/shBrushJava
+//= require syntax-highlighter-rails/shBrushJScript
 //= require_tree .
 
 

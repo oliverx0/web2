@@ -59,6 +59,11 @@ figcaption.about{
   border-radius: 5px;
 }
 
+.photo:hover{
+
+  opacity: 1 !important;
+}
+
 .photo-2{
       width: 130px;
     height: 85px;
@@ -115,6 +120,10 @@ figcaption.about{
 }
 .third-title{
   font-size: 20px;
+}
+
+.fourth-title{
+  font-size: 16px;
 }
 .project a:hover{
 
@@ -247,6 +256,10 @@ ul.content-normal li{
   font-family: 'Open Sans', sans-serif;
   font-size: 31px;
   color: #111;
+}
+
+h4{
+  font-size: 16px !important;
 }
 
 .content{

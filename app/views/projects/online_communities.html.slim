@@ -1,0 +1,366 @@
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " COMMUNITIES IN GRAPHS"
+      h2(style="margin-bottom: 30px") Community detection in graphs using neural networks
+
+
+      p.content-normal.justify The goal of this project was to learn about the different methods available to analyze graphs and discover communities in social networks. More specifically, I wanted to understand the different approaches discovered so far, come up with a method of my own, and attempt to implement one of them. I ended up choosing self-organizing maps (Kohonen Nerual Networks) as the preferred method. It worked very well, although I have yet to compare its results to other possible algorithms.
+
+      p.content-normal.justify Visualization of the results was also an important part of the project. I used D3JS to show a dynamic graph where clicking on a node would show all its connections. Different colors were also used to represent nodes in different communities.
+
+
+      / You can learn more about pallette #{link_to 'here', 'http://web.pallette.us', class: 'blue_link'} and #{link_to 'here', 'http://http://devpost.com/software/pallette', class: 'blue_link'}.
+
+
+      / figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+      /   = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/terrorist_attacks_model.jpg", style: "width: 100%; padding: 10px; background: white; ")
+            / figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-bottom.uk-overlay-slide-bottom Morse Code Display
+
+      h3.content-title
+            b.second-title.third-title Choosing a dataset to analyze
+
+      p.content-normal.justify The first thing I need to do is find a dataset containing social network data. The #{link_to 'DBLP', 'http://dblp.uni-trier.de/xml/', class: 'blue_link'} bibliography graph that contains information about academic publications and their authors (authors are connected if they have a shared publication). The #{link_to 'SNAP Collection', 'http://snap.stanford.edu/data/', class: 'blue_link'} also offers smaller social networks, as well as the #{link_to 'UCI Network Data Repository', 'https://networkdata.ics.uci.edu/index.php', class: 'blue_link'}.
+
+      p.content-normal.justify After going over the UC Irvine Network Data Repository, I decided to use for this project the <b>Bernard and Killworth Dataset</b>. This dataset contains different networks with the same XML structure, so I figured it would be interesting to compare different networks (and therefore different results) of the algorithm implemented later on. In that sense, the 2 datasets I use are:
+
+      ul.content-normal.single-spacing.justify
+        li #{link_to 'Bernard and Killworth Fraternity Dataset', 'http://www.casos.cs.cmu.edu/computational_tools/datasets/external/bkfrat/index11.php', class: 'blue_link'}: This dataset represents interactions among students living in a fraternity at a West Virginia college. It records the number of times a pair of subjects were seen in conversation by an "unobtrusive" observer (who walked through the public areas of the building every fifteen minutes, 21 hours a day, for five days).
+
+        li #{link_to 'Bernard and Killworth Tec Dataset', 'http://www.casos.cs.cmu.edu/computational_tools/datasets/external/bktec/index11.php', class: 'blue_link'}: These data concern interactions in a technical research group at a West Virginia university. It contains a frequency record of interactions, made by an observer every half-hour during one five-day work week.
+
+      p.content-normal.justify The graphs are therefore <i>undirected, weighted</i> graphs. In that sense, it would be interesting to analyze both the weighted (considering the frequency of interactions) and unweighted (simply considering whether two people have interacted at all) versions of them.
+
+      h3.content-title
+        b.second-title.third-title Parsing the XML and Visualizing the Graph
+
+      p.content-normal.justify The files containing the data are <i>bkfrat.xml</i> and <i>bktec.xml</i>. They contain the necessary information about the nodes and the links between them. The first thing I want to do is parse them, store their information in more convenient data structures in memory and be able to visualize them to gain an initial understanding of the data. The functions that take care of this can be found on the GraphAnalyzer.java class:
+
+      ul.content-normal.single-spacing.justify
+        li <b>XML Analysis</b>: I used 2 different data structures to save all the information: an adjacency matrix, that contains the links between every 2 nodes by storing the frequency of interactions, and a list of triplets with the links between nodes and the frequency of interactions. The first helps have a complete structure of the graph, while the second is a more compact way of having the same information to use with D3JS.
+
+
+        li <b>JSON Generation</b>: After storing all the information in memory, I then saved a JSON file with the nodes and links for both datasets. These files are: <i>initial_bktec.json</i> and <i>initial_bkfrat.json</i>. These files are then loaded with D3JS to visualize the graphs:
+
+
+      small.content-normal.italify(style="color: #999") GraphAnalyzer.java sample
+
+      pre(class="brush: java;")
+        = File.open("#{Rails.root}/public/data/graphanalyzer.txt", 'rb') { |f| f.read }
+
+      p.content-normal.justify(style="margin-top: 30px") After generating the JSON files, I wanted to make sure that they could be correctly displayed in D3JS:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; width: 49%; height: 260px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph1.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; width: 49%; height: 260px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph2.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify Visualizing the data shows that the graphs are both very connected! This is very interesting since finding communities in them might give a better overview of the data that is initially impossible to see. However, having so many connections makes it complicated to see what nodes are connected. Because of this, I implemented a function that shows all the links a node is connected to when the pointer is hovered over it:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; width: 49%; height: 260px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph3.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; width: 49%; height: 260px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph4.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      h3.content-title
+        b.second-title.third-title Partitioning graphs into communities
+
+      h4.content-title
+        b.second-title.third-title.fourth-title My Own Algorithm
+
+      p.content-normal.justify Before reading and studying other popular algorithms for finding communities in a graph, I wanted to come up with my own from scratch. That is, without any previous knowledge. This helped me come up with an original idea! The way the algorithm works is the following:
+
+      ul.content-normal.single-spacing.justify(style="list-style-type: decimal")
+        li For every vertex considered, the number of edges connected to it is summed to a total count.
+        li The total count is divided by the total number of vertices. The result is called minimum degrees of separation.
+        li For every node, we count the number of nodes directly connected to it (called current degree of separation). This is based on the idea of page rank, where the node has the most influence in the communities the more it is connected. We then keep track of the of all the nodes connected to it up to the number specified by current degrees of separation.
+        li The current degrees of separation is decreased by one and step 4 is repeated until current degrees of separation is equal to minimum degrees of separation.
+        li Starting with the biggest value of current degrees of separation, we check the nodes with the greatest number of nodes connected to them (could be one or more), will be called top_nodes.
+        li The nodes that are not included in the nodes connected to the top_nodes are then considered (in this case we check their maximum degree of separation) . We now look amongst these nodes to see which one has the greatest number of nodes connected to them. The greatest one is added to the top_nodes.  The process is repeated until all nodes have been considered.
+        li Every top_node is compared against each other in the following manner: the set of nodes connected to each is compared and a community is generated for:
+
+        ul.content-normal.single-spacing.justify(style="list-style-type: decimal; margin-top: 25px")
+          li The elements in top_node1 that do not belong to top_node2 form a community.
+          li The elements in top_node2 that do not belong to top_node1 form another community.
+          li The elements that they both share in common form another community.
+          li The current degree of separation is decreased by one and step 5 is repeated until current degrees of separation is equal to minimum degrees of separation. Note that if a node of greater degree of separation has been used before, it is then not considered.
+
+
+      p.content-normal.justify This method makes it possible for nodes to belong to different communities at the same time. It is worth noting that the graph is undirected. An example of the algorithm follows:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/example1.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify The way the algorithm would work in this case is the following:
+
+      ul.content-normal.single-spacing.justify(style="margin-top: 25px")
+          li <b>Minimum degrees of separation</b>: 1+2+3+3+3+3+3+3+2+1 = 24 / 10 = 2.4 = 2
+          li <b>Node 1</b> has 3 nodes connected to it. The <b>current degrees of separation</b> starts at 3.
+          li <b>Node 1</b> (3) = {1,2,3,4,5,6,7,10}
+          li <b>Node 1</b> (2) = {1,2,3,4,5,6}
+          li <b>Node 2</b> has 3 nodes connected to it. The <b>current degrees of separation</b> starts at 2.
+          li <b>Node 2</b> (2) = {2,3,1,4,5}
+          li <b>Node 3</b> has 1 node connected to it. Since the <b>minimum degrees of separation</b> is 2, it is not considered.
+          li <b>Node 4</b> has 2 nodes connected to it. The <b>current degrees of separation</b> starts at 2.
+          li <b>Node 4</b> (2) = {4,1,2,5,6}
+          li <b>Node 5</b> has 3 nodes connected to it. The </b>current degrees of separation</b> starts at 3.
+          li <b>Node 5</b> (3) = {1,2,3,4,5,6,7,8,10}
+          li <b>Node 5</b> (2) = {1,2,4,5,6,7,10}
+          li <b>Node 6</b> has 3 nodes connected to it. The </b>current degrees of separation</b> starts at 3.
+          li <b>Node 6</b> (3) = {6,1,2,4,5,7,8,9,10}
+          li <b>Node 6</b> (2) = {6,1,4,5,7,8,10}
+          li <b>Node 7</b> has 3 nodes connected to it. The </b>current degrees of separation</b> starts at 3.
+          li <b>Node 7</b> (3) = {7,6,10,8,9,5,4,1}
+          li <b>Node 7</b> (2) = {7,5,6,10,8,9}
+          li <b>Node 8</b> has 2 nodes connected to it. The </b>current degrees of separation</b> starts at 2.
+          li <b>Node 8</b> (2) = {9,7,8,6,10}
+          li <b>Node 9</b> has 1 node connected to it. Since the <b>minimum degrees of separation</b> is 2, it is not considered.
+          li <b>Node 10</b> has 2 nodes connected to it. The </b>current degrees of separation</b> starts at 2.
+          li <b>Node 10</b> (2) = {5,6,7,8,10}
+
+      p.content-normal.justify We now consider the top nodes. To do so, we start with maximum degrees of separation = 3:
+
+      ul.content-normal.single-spacing.justify(style="margin-top: 25px")
+          li The top nodes are 5 and 6 with 9 nodes each. Since they include all the nodes in the total, no other nodes need to be considered.
+          li <b>Community 1</b> (only in 5): {3}
+          li <b>Community 2</b> (only in 6): {9}
+          li <b>Community 3</b> (in 5 and 6): {1,2,4,5,6,7,8,10}
+          li Nodes analyzed so far: 5 and 6
+
+      p.content-normal.justify We now move to the second greatest sets with maximum degree of separation = 2. Since we already analyzed 5 and 6, we don’t consider these (unless they are not included in the none of the sets to consider). Since the current degree of separation is equal to the minimum degree of separation, we stop here. Note how node 7 for example is not considered because its maximum degree of separation was 3.
+
+      ul.content-normal.single-spacing.justify(style="margin-top: 25px")
+          li The top nodes are 2 and 8 with 5 nodes each.
+          li <b>Community 4</b> (only in 2): {1,2,3,4,5}
+          li <b>Community 5</b> (only in 8): {6,7,8,9,10}
+          li <b>Community 6</b> (in 2 and 8): {}
+          li Nodes analyzed so far: 5,6,2 and 8
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Girvan Newman Algorithm
+
+      p.content-normal.justify The <i>#{link_to 'Girvan-Newman method', 'http://www.ismll.uni-hildesheim.de/lehre/cmie-11w/script/lecture5.pdf', class: 'blue_link', target:'_blank'}</i> is a divisive method (divides the graph into different communities) based on <i>edge betweenness</i>, which consists on the number of shortest paths passing through the edge. This is the weight assigned to the edges and based on that the graph is divided by the edge with the highest betweenness. The basic idea behind the algorithm is the following:
+
+      ul.content-normal.single-spacing.justify(style="list-style-type: decimal")
+        li Calculate the edge betweenness for every edge in the graph.
+        li Remove the edge with the highest betweenness.
+        li Calculate the edge betweenness for remaining edges.
+        li Repeat steps 2-4 until all edges are removed.
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify In order to calculate the edge betweenness it is necessary to find all shortest paths in the graph. The algorithm starts with one vertex, calculates edge weights for paths going through that vertex, and then repeats it for every vertex in the graph and sums the weights for every edge.
+
+      p.content-normal.justify It is possible that more than one shortest path connects the source vertex to the target vertex. In that case the weight is distributed equally among the edges.
+
+      p.content-normal.justify Technically it is possible to execute the algorithm and have it show in the end as many communities as nodes, and then go up on level until the community is the entire graph. However since this would take too long a measure is necessary to determine how many communities are expected and good enough. This measure is <b>modularity</b>. Since optimizing modularity is considered an NP-hard problem, different techniques have been proposed for improving the speed of the process.
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan2.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan3.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Self Organizing Maps (Kohonen Neural Networks)
+
+
+      p.content-normal.justify Self-Organizing maps are a type of clustering algorithm based on neural networks, #{link_to 'which have also proven to be successful when detecting communities in graphs', 'http://www.aporc.org/LNOR/11/OSB2009F09.pdf', class: 'blue_link', target: '_blank'}. The basic structure is a neural network with 2 layers: an input layer and an output layer (also named kohonen layer). The input layer has n neurons where n is the number of attributes, whereas the output layer is a M*M matrix were M is the square root of the upper bound of communities. In the case of community detection, the idea is to generate clusters with nodes that are similar, similarity being measured by the other nodes a node is connected to.
+
+      p.content-normal.justify In that sense, the process to cluster the nodes is the following. Consider a network G with n nodes and m putative communities, (m being in this case the upper bound of communities). Let A = [aij]n*m be the adjacency matrix of network G. The scheme of the SOM for detecting community structure is shown in the following figure:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/kohonen1.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify It has n input neurons corresponding to the nodes vi - vn in G, and m output neurons representing possible communities C1, C2 … Cm. The connection weight matrix between input neurons and output neurons is W = [wij]n*m, where the weight wij expresses the possibility or membership degree that node vi belongs to community Cj.
+
+      p.content-normal.justify It is also important to mention that communities maintain a distance property. This means that a hierarchical approximation can also be done based on how close 2 communities are (and merge them into one, higher level community. This property is ensured by the fact that when a input neuron vi is mapped to an output neuron Cj, then their connection is reinforced, and so are all the other weights of the output neurons near it (neighbors).
+
+      p.content-normal.justify The training process of the neural network works in the following way:
+
+      ul.content-normal.single-spacing.justify(style="list-style-type: decimal")
+        li The n dimensional weight vectors are selected at random. An initial radius r, a learning constant k, and a neighborhood function f are selected.
+        li Select an input vector E randomly.
+        li The unit k with the maximum excitation is selected (that is, for which the distance between wi and E is minimal).
+        li The weight vectors are updated using the neighborhood function and the update rule:
+
+        figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 50px; margin-top: 10px;")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/kohonen2.jpg", style: "padding: 10px; margin-left: 0; height: 60px; background: white;")
+
+        li Stop if the maximum number of iterations has been reached. Otherwise, modify k and f as scheduled and continue with step 2.
+
+      p.content-normal.justify The modifications at the weight vectors attracts them in the direction of the input E. By repeating this process several times, we expect to arrive at a uniform distribution of weight vectors in input space (if the inputs have also been uniformly selected). The radius of the neighborhood is reduced according to a previous plan, which we will call schedule. The effect is that each time a unit is updated, neighboring units are also updated.
+
+
+      p.content-normal.justify If the weight vector of a unit is attracted to a region in input space, the neighbors are also attracted, though to a lesser degree. During the learning process both the size of the neighborhood and the value of f fall gradually, so that the influence of each input unit is reduced. The learning constant controls the magnitude of the weight updates and is also reduced gradually. The net effect of the selected schedule is to produce larger corrections at the beginning of training than at the end.
+
+      p.content-normal.justify After training, the idea is simply to compute the community to which a node belongs to, simply by using the formula:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 225px; margin-top: 10px;")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/kohonen3.jpg", style: "padding: 10px; margin-left: 0; height: 60px; background: white;")
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Comparing the different methods
+
+      p.content-normal.justify The first method proposed has the most limitations. In the first place, it has not been tested thoroughly with different types of graphs, and therefore it does not guarantee that it will always work. In fact, it can easily be seen that it won’t work in networks were vertices have too many edges and the degrees of separation are too low. In any case, it was a very interesting challenge to come up with it myself.
+
+      p.content-normal.justify The second method is one of the most popular ones. The problem is that is can be very slow when the network is extremely big, and modularity has to be considered. Since optimizing the modularity function is an NP-Hard problem, different methods have been proposed to solve this. While not considered in this analysis, the Girvan-Newman algorithm using certain modifications can be quite fast and probably yields the best results.
+
+      p.content-normal.justify The third method is a clustering technique which is also applied to other types of data outside graphs. While initially it has the problem that the nodes belong to a single community, it is possible to use the properties of distance between communities to do a hierarchical structure, allowing nodes to belong to more than one community (though only of a higher level).
+
+      h3.content-title
+        b.second-title.third-title Implementing Method #3 - Kohonen Neural Networks
+
+      p.content-normal.justify  After analyzing the different methods available, I have decided to use the third method to calculate the communities in the Bernard and Killworth Dataset. The Self Organizing Map has been implemented in a Java Dynamic Web Project.
+
+      p.content-normal.justify  In terms of the actual algorithm itself, a few things are important to mention:
+
+      ul.content-normal.justify
+        li The adjacency matrix has been modified to make it so that a node is connected to itself. That is simply to make sure that the neural network is does not confuse it into thinking that a node is NOT connected to itself. After doing this, the algorithm has been implemented following the steps mentioned above.
+        li One of the main issues with Self Organizing Maps is that it is necessary to test different parameters to see which ones yield the best results. In this case however, it is very hard to say whether a community has been identified correctly or not by simply looking at it. However, it is possible to see which nodes are connected in the community to try to somewhat identify its correctness. One possible way that would have helped addressing the correctness of the algorithm would have been to use a test set from which the communities are already known. Examples of this include the famous karate club graph.
+        li As stated in previous points, the main problem with using SOM to identify communities is that it forces nodes to belong to one community only. I had an idea of using the distance property that clusters using SOM have by which some are closer than others, and that way a hierarchical community could be considered. Unfortunately, due to time constraints I was not able to implement it. But the basic idea is that communities that are close to each other will be identified by similar colors, and grouping similar colors together would bring about new communities.
+
+      small.content-normal.italify(style="color: #999") Kohonen Neural Network - Implementation sample
+
+      pre(class="brush: java;")
+        = File.open("#{Rails.root}/public/data/kohonen.txt", 'rb') { |f| f.read }
+
+      h3.content-title
+        b.second-title.third-title(style="margin-top: 40px !important") Visualizing Results
+
+      p.content-normal.justify  The visualization of results has been splitted into 4 different results: for each of the 2 data sets, the weighted and unweighted versions have been analyzed. As it can be seen from the images and the explanations below, the algorithm works to some extent! By comparing the different nodes and the other nodes to which they are connected to, it is possible to see that Self Organizing Maps indeed work to identify communities!
+
+      h4.content-title
+        b.second-title.third-title.fourth-title BKTEC - Weighted Version
+
+      p.content-normal.justify The following figure shows the results for the weighted version of the BKTECT dataset. It is really interesting to see how the nodes have been separated into different communities as shown with the different colors:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; align-content: center; width: 70%; margin: auto; display: block;")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results1.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify(style="margin-top: 35px") While testing to see if the communities are actually accurate might be very complicated, it is possible to find similarities in connections of the nodes, even in just 1 degree of separation!:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; width: 49%; height: 260px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results2.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; width: 49%; height: 260px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results3.jpg", style: "width: 100%; height: 100%; padding: 10px; background: white; ")
+
+      h4.content-title
+        b.second-title.third-title.fourth-title BKTEC - Unweighted Version
+
+      p.content-normal.justify The following figure shows the results for the unweighted version of the BKTECT dataset. In this case the frequency of interaction between nodes is not taken into account. It is really interesting how the nodes have been separated into different communities as shown with the different colors:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; align-content: center; width: 70%; margin: auto; display: block;")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results4.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify(style="margin-top: 35px") Once again we can appreciate how nodes belonging to the same communities have similar connections even in just 1 degree of separation:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; width: 49%; height: 260px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results5.jpg", style: "width: 100%; height:100%; padding: 10px; background: white; ")
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; width: 49%; height: 260px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results6.jpg", style: "width: 100%; height: 100%; padding: 10px; background: white; ")
+
+      h4.content-title
+        b.second-title.third-title.fourth-title BKFRAT - Weighted version
+
+      p.content-normal.justify The following figure shows the results for the weighted version of the BKFRAT dataset. Even though there are so many nodes, it is clear that certain communities exist in the graph:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; align-content: center; width: 70%; margin: auto; display: block;")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results7.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify(style="margin-top: 35px") Once again, it can be seen how nodes that share many connections belong to the same community:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; align-content: center; width: 70%; margin: auto; display: block;")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results8.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      h4.content-title
+        b.second-title.third-title.fourth-title BKFRAT - Unweighted version
+
+      p.content-normal.justify The following figure shows the results for the unweighted version of the BKFRAT dataset. Even though there are so many nodes, it is clear that certain communities exist in the graph:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; align-content: center; width: 70%; margin: auto; display: block;")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results9.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify(style="margin-top: 35px") It is interesting to see how nodes with similar connections belong to the same community with just 1 degree of separation:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results10.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify(style="margin-top: 35px") But it is even more interesting to see how nodes with 2 degrees of separation that share many connections can also belong to the same community!
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; align-content: center; width: 70%; margin: auto; display: block;")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results11.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      div(style="margin-top: 40px")
+        small.content-normal.italify(style="color: #999") D3.js Visualization Code Sample
+        pre(class="brush: javascript;")
+          = File.open("#{Rails.root}/public/data/d3.txt", 'rb') { |f| f.read }
+
+      div.uk-margin-large-top
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/example1.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/example1_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan2.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan2_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan3.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/girvan3_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph1.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph1_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph2.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph2_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph3.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph3_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph4.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/graph4_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/kohonen1.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/kohonen1_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results1.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results1_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results2.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results2_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results4.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results4_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results6.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results6_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results7.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results7_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results8.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results8_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results9.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results9_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results11.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/online_communities/results11_thumb.jpg", :alt => "rss feed", class: "photo", style: "opacity: 0.85")
+
+
+
+
+javascript:
+  SyntaxHighlighter.all()
