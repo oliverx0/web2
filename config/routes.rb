@@ -23,6 +23,9 @@ Rails.application.routes.draw do
   get 'projects/terrorist_attacks_model' => 'projects#terrorist_attacks_model'
   get 'projects/online_communities' => 'projects#online_communities'
   get 'projects/parallel_api' => 'projects#parallel_api'
+  get 'projects/design_thinking' => 'projects#design_thinking'
+
+
   get '*path' => redirect('/')   unless Rails.env.development?
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
