@@ -121,7 +121,7 @@ div(style="position: relative")
               li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Design+Thinking/design_thinking#{i+1}_thumb.jpg", :alt => "rss feed", class: "photo-2")
           - elsif i+1 != 4
             a(href="#{vids[i+1]}" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image")
-              li = image_tag("design_thinking#{i+1}_thumb.jpg", :alt => "rss feed", class: "photo-2")
+              li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Design+Thinking/design_thinking#{i+1}_thumb.jpg", :alt => "rss feed", class: "photo-2")
         end
 
       div(style="border-left: 1px solid #bbb;
