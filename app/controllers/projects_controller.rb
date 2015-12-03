@@ -14,4 +14,7 @@ class ProjectsController < ApplicationController
   def online_communities
   end
 
+  def parallel_api
+  end
+
 end

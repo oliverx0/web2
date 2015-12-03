@@ -1,0 +1,174 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " PARALLEL PROCESSES API"
+      h2(style="margin-bottom: 30px") Master-worker parallel architecture using MPI
+
+
+      p.content-normal.justify This project was done with my friend Faiyam Rahman. Using the third party MPI (Message Passing Interface) library, we built an API in C that anyone can use to implement their parallel Master-Worker programs, without having to worry about the details of the Master-Worker paradigm. You can see all the source code #{link_to 'here', 'https://github.com/frahman5/ParallelAndDistributed/tree/master/lab2and3', class: 'blue_link', target: '_blank'}.
+
+      h3.content-title
+            b.second-title.third-title Master-worker Architecture
+
+      p.content-normal.justify The idea behind this paradigm is the following: if a system running multiple process is executing a program that can easily be parallelized (based on whether it can be easily split up with no dependencies between the parts), it should take advantage of the multiple processors available to execute faster. A master process is in charge of splitting the work into different units and distributing such units to the rest of the "worker" processes.
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Parallel+API/master_worker.jpg", style: "width: 100%; background: white; ")
+
+      h3.content-title
+            b.second-title.third-title How to use
+
+      ul.content-normal.single-spacing.justify(style="list-style-type: decimal")
+        li Load the <i>api.h</i> file into the main program. Make sure <i>api.c</i> and <i>utils.c</i> are in the same folder.
+        li Define the structures of the individual work and the result of a work performed by a worker:
+        ul.content-normal.single-spacing.justify(style="margin-top: 15px; margin-bottom: 20px;")
+          li <i>struct one_work {};</i>: struct of type one_work containing all the elements of work to be sent to an individual worker. It cannot contain pointers.
+          li <i>struct one_result_t {};</i>: a struct of type one_result containing all the elements of a “result” from the work of an individual worker that is returned to the master. It cannot contain pointers.
+        li Define the function make_work, do_work, and report necessary for the API to work:
+        ul.content-normal.single-spacing.justify(style="margin-top: 15px; margin-bottom: 20px;")
+          li <i>one_work_t **make_work (int argc, char **argv) {}</i>: the function to be called by the “master” and that is in charge of dividing the work into several work chunks of type one_work_t. Returns a NULL-terminated list of one_work_t.
+
+          li <i>one_result_t *(*do_one_work) (one_work_t* work) {}</i>: the function to be called by a worker. It receives a piece of work and does the execution the user defines on it. It returns the result in the form of one_result_t.
+
+          li <i>int report (int sz, one_result_t **result_array) {}</i>: the function to be called by the master after collecting the results from every worker and storing them into an array. It reports the results in the way the user defines. Returns 0 on failure and 1 in success.
+
+        li In the main function, declare a new instance of our API, assign it all the parameters and functions previously specified, set up MPI_Initialize() and MPI_Finalize(), and run MW_Run():
+        ul.content-normal.single-spacing.justify(style="margin-top: 15px; margin-bottom: 20px;")
+          li <i>one_work_t **make_work (int argc, char **argv) {}</i>: the function to be called by the “master” and that is in charge of dividing the work into several work chunks of type one_work_t. Returns a NULL-terminated list of one_work_t.
+
+        li To run the program you need the MPI library installed. Please run the following commands:
+        ul.content-normal.single-spacing.justify(style="margin-top: 15px; margin-bottom: 20px;")
+          li <i>mpicc api.c utils.c “your_program”.c -o “program_name”</i>
+
+          li <i>mpirun -np “number of processors” “program_name”</i>
+
+      small.content-normal.italify(style="color: #999") Example
+      pre(class="brush: java;")
+         = File.open("#{Rails.root}/public/data/parallel.txt", 'rb') { |f| f.read }
+
+      h3.content-title(style="margin-top: 40px")
+            b.second-title.third-title Assigning work units to worker processes
+
+      p.content-normal.justify(style="margin-bottom: 20px")  We implemented the work distribution in 2 different ways:
+      ul.content-normal.single-spacing.justify
+          li <b>Round-robin: </b>the master iterates over the work chunks and assigns each one a processor in order of processors available. It retrieves the results from the processors in a non-blocking manner after sending all the chunks, adds all the results to a single array, and then report the results using the report_results function.
+
+          li <b>Dynammic work allocation: </b>The first x amount of work chunks are assigned to the x available processors by the master. Then the master waits for results from any of these processors, and as soon as it receives one, it then sends the next work chunk to that process.
+
+      h3.content-title
+            b.second-title.third-title Handling failure
+
+      p.content-normal.justify In order to simulate failure, we implemented the function random_fail(), which returns true or false when called by a worker to let him know that he failed and that he should finalize and end execution. The probability of a worker failing is indicated by a macro called PROB_FAIL which can be modified in the code. It is important to mention that the seed generated for every worker had to be different in order for the random_fail() function to really be random, this was done by taking the current time as a seed and multiplying it by the worker’s id.
+
+      p.content-normal.justify Every time a worker is going to send a message back to the master with the result of its chunk of work, it calls the random_fail() function to see if it should fail. This is all implemented in the function F_Send() in the file utils.py
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Failure in Round-robin
+
+      p.content-normal.justify For the case in which the master assigns the work in a round robin manner to the workers (not considering anything else other than the workers rank order to distribute work equally amongst them), our approach to handle failure in the worker is the following:
+
+      ul.content-normal.single-spacing.justify
+        li The master initializes all the necessary variables, arrays, etc. The most relevant ones for this explanation include:
+        ul.content-normal.single-spacing.justify(style="margin-top: 15px; margin-bottom: 20px;")
+          li <i>result_array</i>: contains all the results received by the master.
+          li <i>work_chunk_completion_array</i>: an array of ints that has the size of work chunks. It helps the master keep track of all the work_chunks for which it has received a result. 1 indicates the work_chunk at index i has been received, 0 indicates otherwise.
+          li <i>worker_last_time</i>: an array of doubles that has the size of number of workers. It helps the master keep track of the last time he received anything from a worker.
+          li <i>worker_status</i>: an array of ints that has the size of number of workers. It helps the master keep track of all the workers that he recognizes as alive. (0 indicates the worker at the ith index is dead and 1 indicates he is alive).
+          li <i>received</i>: variable initialized to 0. It becomes 1 every time the master should check for a result.
+
+        li It then enters in a while loop that will end when the result_index variable, which indicates how many results the master has currently received, is equal to the number of work chunks the master has.
+
+        li The first thing it does is then check if it has received a result, using the MPI function MPI_Probe(), that updates a received variable to 1 and a probe_status with the information about the new message.
+
+        li If it has received a result, it then reads the message and the probe_status, updates the <i>results_array</i>, the <i>worker_last_time array</i>, the <i>work_chunk_completion array</i>, the <i>result_index</i>, and the received variable back to 0. It is worth mentioning that the master knows which <i>work_chunk</i> in the <i>work_chunk_completion array</i> the result received corresponds to because its index is what is sent as an <i>MPI_TAG</i> from the worker.
+
+        li Whether the master receives a result or not, it then checks to see if there are any dead workers and updates the worker_status array. To check for dead workers, it compares the current time to the last time it received a message from each one of them and if more than a specified interval has passed, it marks them as dead. This interval is specified as a macro in DEATH_INTERVAL.
+
+        li If there are still workers alive, the master sends them some work to do by selecting the next work chunk in the work_chunks_array. The tag of these messages are the index of the work chunk. We check for what work chunks the master has not received results for and send those chunks again in case we have already iterated over all the work chunks and the results still have not arrived. In order to make sure that we don’t send a work chunk to a dead process, we then check not for the next process but for the next alive process.
+
+        li The master then increases the index of the next worker to send work to and starts over.
+
+        li If there are no more workers alive, the master exists the program.
+
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Failure in Dynamic Work Allocation
+
+      p.content-normal.justify For the case in which the master assigns the work in a dynamic manner to he workers (based on what workers are free to receive new chunks of work), our approach to handle failure in the worker is the following:
+
+      ul.content-normal.single-spacing.justify
+        li The master initializes all the necessary variables, arrays, etc. The most relevant ones for this explanation include:
+        ul.content-normal.single-spacing.justify(style="margin-top: 15px; margin-bottom: 20px;")
+          li <i>result_array</i>: contains all the results received by the master.
+          li <i>work_chunk_completion_array</i>: an array of ints that has the size of work chunks. It helps the master keep track of all the work_chunks for which it has received a result. 1 indicates the work_chunk at index i has been received, 0 indicates otherwise.
+          li <i>worker_last_time</i>: an array of doubles that has the size of number of workers. It helps the master keep track of the last time he received anything from a worker.
+          li <i>worker_status</i>: an array of ints that has the size of number of workers. It helps the master keep track of all the workers that he recognizes as alive. (0 indicates the worker at the ith index is dead and 1 indicates he is alive).
+          li <i>received</i>: variable initialized to 0. It becomes 1 every time the master should check for a result.
+
+        li It then sends the first batch of work to the workers in a round robin manner.
+
+        li The rest of the results are sent dynamically. In order to do that, it then enters in a while loop that will end when the result_index variable, which indicates how many results the master has currently received, is equal to the number of work chunks the master has.
+
+        li The first thing it does is then check if it has received a result, using the MPI function MPI_Probe(), that updates a received variable to 1 and a probe_status with the information about the new message.
+
+        li If it has received a result, it then reads the message and the probe_status, updates the results_array, the worker_last_time array, the work_chunk_completion array, the result_index, and the received variable back to 0 using the receiveResult function. This function returns the id of the worker it has received a result from. It is worth mentioning that the master knows which work_chunk in the work_chunk_completion array the result received corresponds to because its index is what is sent as an MPI_TAG from the worker.
+
+        li If the master has received a result, in then automatically sends the next available work chunk to the worker it just received a result from.
+
+        li Whether the master receives a result or not, it then checks to see if there are any dead workers and updates the worker_status array. To check for dead workers, it compares the current time to the last time it received a message from each one of them and if more than a specified interval has passed, it marks them as dead. This interval is specified as a macro in DEATH_INTERVAL.
+
+        li If there are no more workers alive, then it exits the program.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Failure in the Master Process
+
+      p.content-normal.justify In order to handle the master failing this time, the approach was the same for both the round robin and the dynamic work allocation:
+
+      ul.content-normal.single-spacing.justify
+        li Every time the master receives a new result, it writes a check point (state) to a file.
+
+        li Every worker updates the last time they received a message from the master. If that time takes longer than a specified interval, then it determines the ID of the new master based on the minimum ID of workers that are still alive. If the ID of the new master is the same as the worker’s ID, the worker becomes the new master.
+
+        li Every worker is constantly checking for the last time the received a message from master, so if the new master assigned turns out to be dead or dies right after being assigned, the workers simply select a new master. In that sense, <b>we handle multiple masters failures</b>.
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Parallel+API/master_worker.jpg" data-uk-lightbox="{group:'my-group'}" title="Master Worker Architecture" data-lightbox-type="image")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Parallel+API/master_worker.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Parallel+API/mpi_send_recv.jpg" data-uk-lightbox="{group:'my-group'}" title="MPI_Send() and MPI_Recv()")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Parallel+API/mpi_send_recv_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Parallel+API/speedup_dp.jpg" data-uk-lightbox="{group:'my-group'}" title="Example of speedup for a parallel process")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Parallel+API/speedup_dp_thumb.jpg", :alt => "rss feed", class: "photo-2")
+      div(style="border-left: 1px solid #bbb;
+      padding-left: 35px;
+      margin-top: 50px; margin-left: 16px")
+        h3.content-title
+          b.second-title.third-title Interested?
+
+        p.content-normal.justify(style="padding-bottom: 10px") You might want to checkout my #{link_to 'Parallel Computing Class Portfolio', 'https://s3-us-west-2.amazonaws.com/ojh22/Parallel+API/ParallelPortfolio.pdf', class: 'blue_link', target: '_blank'}.
+
+
+javascript:
+  SyntaxHighlighter.all()
