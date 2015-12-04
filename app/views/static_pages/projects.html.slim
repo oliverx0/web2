@@ -46,11 +46,10 @@ div(style="position: relative")
             = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Design+Thinking/design_thinking.jpg", class: "photo-big")
             figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Design Thinking Challenge
 
-        li
+        li = link_to projects_collaborative_filtering_path,'data-no-turbolink' => true
           figure.portfolio.uk-overlay.uk-overlay-hover
-            = image_tag("thumbnail.jpg", class: "photo-big")
-            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Upcoming Project
-
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/collaborative_filtering_thumb.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Collaborative Recommendation System
         li
           figure.portfolio.uk-overlay.uk-overlay-hover
             = image_tag("thumbnail.jpg", class: "photo-big")

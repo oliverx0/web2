@@ -17,4 +17,10 @@ class ProjectsController < ApplicationController
   def parallel_api
   end
 
+  def design_thinking
+  end
+
+  def collaborative_filtering
+  end
+
 end

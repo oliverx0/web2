@@ -1,0 +1,226 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " COLLABORATIVE FILTERING"
+      h2(style="margin-bottom: 30px") USER - USER MOVIES FILTER
+
+
+      p.content-normal.justify Nowadays it is very common for e-commerce sites to make recommendations to users on new products to purchase. Based on their purchase history, algorithms are able to determine products that a user might be interested in buying. There are many ways to go about his. In this project I looked at the most common recommendation methods out there and implemened the user-user approach applied to a movies recommendation engine (such as Netflix), described in further detail below.
+
+      / You can learn more about pallette #{link_to 'here', 'http://web.pallette.us', class: 'blue_link', target: '_blank'} and #{link_to 'here', 'http://devpost.com/software/pallette', class: 'blue_link', target: '_blank'}.
+
+      h3.content-title
+            b.second-title.third-title Selecting a dataset
+
+      p.content-normal.justify In order to build a recommendations engine, I am going to be using the #{link_to 'MovieLens', 'http://grouplens.org/datasets/movielens/', class: 'blue_link', target: '_blank'} 1M dataset, a stable benchmark dataset which contains 1 million ratings from 6,000 users on 4,000 movies. It was released on Feb. 2003.
+
+
+      h3.content-title
+            b.second-title.third-title Collaborative filtering recommendation system
+
+      p.content-normal.justify Collaborative filtering is a popular recommendation algorithm that bases its predictions and recommendations on the ratings or behaviors of other users in the system. The fundamental assumption behind this method is that other users’ opinions can be selected and aggregated in such a way to provide a reasonable prediction of the active user’s preference. The idea is that if users agree on the quality or relevance of some items, then they will likely agree on other items as well.
+
+      p.content-normal.justify I am now going to describe 3 methods for implementing a collaborative filtering recommender for the data set previously selected. More information on these methods can be found #{link_to 'here', 'http://files.grouplens.org/papers/FnT%20CF%20Recsys%20Survey.pdf', class: 'blue_link', target: '_blank'}.
+
+      h3.content-title
+        b.second-title.third-title Method #1 - User to User Collaborative Filtering
+
+      p.content-normal.justify User-user collaborative filtering, also known as k-NN collaborative filtering, is the algorithmic interpretation of the core idea behind collaborative filtering: find other users whose past rating behavior is similar to the current user and then use items the user in question has not seen but has been highly regarded by the other users. It requires a rating matrix R, a similarity function to computer similarities among users, and a method for using similarities and ratings to generate predictions.
+
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Computing Predictions
+
+      p.content-normal.justify To generate predictions or recommendations for a user <i>u</i>, the collaborative filter first needs to find a neighborhood of users neighbors of <i>u</i>. Once the neighborhood <i>N</i> has been computed, the system combines the ratings of users in <i>N</i> to generate predictions for user <i>u</i>’s preference for an item <i>i</i>. This is typically done by computing the weighted average of the neighbors’ ratings using similarity as the weights.
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 110px; margin-top: 10px;")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/  user-user.jpg", style: "padding: 10px; margin-left: 0; width: 400px; background: white;")
+
+      p.content-normal.justify In the previous equation, subtracting the user’s mean rating <i>ru</i> compensates for the differences in users’ use of the rating scale (some users will tend to give higher ratings than others). The previous equation can also be extended to normalize user ratings to z-scores by diving the offset from the mean rating by the standard deviation of each user’s ratings, compensating therefore for users differing in rating spread as well as mean spread:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 110px; margin-top: 10px;")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/user-user2.jpg", style: "padding: 10px; margin-left: 0; width: 400px; background: white;")
+
+      p.content-normal.justify In terms of the number of neighbors to select, different possibilities exist. Some systems use all users as neighbors, others have neighborhoods for each item, etc. For movie ratings data, k = 20 seems to have worked well in other studies.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Computing user similarity
+
+      p.content-normal.justify A critical design decision in implementing user-user collaborative filtering is the choice of similarity function. Several different similarity functions have been proposed and evaluated in the literature:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px;")
+          li <b>Pearson correlation</b>: this method computes the statistical correlation (Pearson’s r) between 2 user’s common ratings to determine their similarity. The correlation is computed by:
+
+          figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 110px; margin-top: 10px;")
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/user-user3.jpg", style: "padding: 10px; margin-left: 0; width: 400px; background: white;")
+
+          p.content-normal.justify Pearson’s correlation suffers from computing high similarity between users with few ratings in common. This can be improved by setting a threshold on the number of co-rated items necessary for full agreement (correlation 1) and scaling the similarity when the number of co-rated items falls below this threshold. Experiments have shown a threshold value of 50 to be useful in improving prediction accuracy. The threshold can be applied by multiplying the resulting similarity function by min {|Iu, Iu2|/threshold, 1}.
+
+          li <b>Constrained pearson correlation</b>: the idea is using the same formula as in the person correlation, but in this case, instead of using the ru and rv means, we use a rz score which represents the mean value of the rating scale.
+
+          li <b>Cosine similarity</b>: in this case users are represented as vectors, and similarity is measured by the cosine distance between 2 vectors. Unknown ratings are considered 0, causing them to be negative. The formula is:
+
+          figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 110px; margin-top: 10px;")
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/user-user4.jpg", style: "padding: 10px; margin-left: 0; width: 400px; background: white;")
+
+      h3.content-title
+        b.second-title.third-title Method #2 - Item to Item Collaborative Filtering
+
+      p.content-normal.justify Although User-to-User collaborative filtering is effective, it suffers from scalability problems as the user base grows. Searching for the neighbors of a user is a O(|U|) operation, where U is the set of all users. Item-to-item collaborative filtering was developed specifically for the purpose of scalability. The idea is that if 2 items tend to have the same users like and dislike them, then they are similar and users are expected to have similar preferences for similar items. It can be seen then that in terms os structure it is similar to content based approaches to recommendation and personalization, but item similarity is deduced from user preference patterns rather than extracted from item data.
+
+      p.content-normal.justify Item-item collaborative filtering generates predictions by using the user’s own ratings for other items combined with those items’ similarities to the target item, rather than other users’ ratings and user similarities as in user-user collaborative filtering. Similar to the user-user collaborative filtering, however, the recommender system needs a similarity function and a method to generate predictions from ratings and similarities. A more detailed step by step description of the algorithm follows:
+
+      ul.content-normal.single-spacing.justify(style="margin-top: 10px; margin-bottom: 20px;")
+          li Given an Item Matrix where every row represents an item and every attribute a user rating
+
+          li We want to generate a recommendation for user <i>u</i>
+
+          li To do this, we go over every item <i>i</i> that <i>u</i> has rated
+
+          li And find the <i>k</i> most similar items of <i>i</i> in the Matrix using a similarity function
+
+          li We then predict a rating the user will give item <i>i</i> based on the ratings he has given the similar items in the set. Since the user might not have rated all items in the set, only those he has rated are taken into account.
+
+      p.content-normal.justify Just by this definition, it can be seen that the problem of scalability still exists, since since it is still necessary to find the most similar items to generate predictions and recommendations. The performance boost can be seen however when the similarity matrix is pre-computed.
+
+      p.content-normal.justify In the case of User-to-User, as a user rates and re-rates items, their ratings behavior will change along with their similarity to other users. Finding similar users in advance is therefore complicated, since a user’s neighborhood is determined not only by his ratings but also by the ratings of other users, so the neighborhoods can change as a result of new ratings supplied by any user in the system. For this reason, most user-user collaborative filtering systems find neighborhoods at the time when predictions or recommendations are needed.
+
+      p.content-normal.justify In systems with a sufficiently high user to item ratio however, one user adding or changing his recommendation is unlikely to significantly change the similarity between 2 items, particularly when the items have many ratings. Therefore, it is reasonable to pre-compute similarities between items in an item-item similarity matrix.
+
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Computing Predictions
+
+      p.content-normal.justify After collecting a set of items S similar to i, the prediction pu,i can be computed using weighted sum as:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 110px; margin-top: 10px;")
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/item-item.jpg", style: "padding: 10px; margin-left: 0; width: 400px; background: white;")
+
+      p.content-normal.justify It is worth mentioning 2 challenges that might be faced when computing predictions:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px;")
+          li Depending on the method used to compute similarities, these might end up being negative but ratings might be constrained to be positive. When this occurs, this can be corrected by thresholding similarities so that only those with non-negative similarities are considered or by averaging distance from the baseline predictor:
+
+          figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 110px;")
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/item-item2.jpg", style: "padding: 10px; margin-left: 0; width: 360px; background: white;")
+
+          li When using non-real-valued rating scales, such as unary scales common in e-commerce sites, then averaging does not work: if all similarities are positive and the rating of user for an item is 1 when he has purchased it, then the prediction will always be 1. When this occurs, pseudo-predictions with a simple aggregation of the similarities to items in the user’s purchasing history (using summation, for example) is a good workaround.
+
+          figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 205px; margin-top: 10px;")
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/item-item3.jpg", style: "padding: 10px; margin-left: 0; height: 85px; background: white;")
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Computing Item - Item Similarity
+
+      p.content-normal.justify The item-item prediction process requires an item-item similarity matrix S. This matrix is a standard sparse matrix, with missing values being 0 (no similarity). Cosine Similarity is the most popular and widely used metric as it is simple, fast and produces good accuracy.
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 200px; margin-top: 10px;")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/item-item4.jpg", style: "padding: 10px; margin-left: 0; width: 200px; background: white;")
+
+      h3.content-title
+        b.second-title.third-title Method #3 - Hybrid Recommender Systems
+
+      p.content-normal.justify The use of hybrid recommender systems consist in using collaborative filtering algorithms such as user-user or item-item in combination with other approaches such as content-based approaches to consider particular use cases where the user-user or item-item tend to give worse results.
+
+      p.content-normal.justify For example, item-item collaborative filtering suffers when no one has rated an item yet, but content-based approaches do not. A hybrid recommender could use description based similarities to match the new item with an existing item based on metadata, allowing it to be recommended anyway, and increase the influence of collaborative filtering as users rate the item. Similarly, users can be defined by the content of the times they like as well as the items themselves.
+
+      p.content-normal.justify There have been different methods for incorporating hybrid recommenders, which include:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px;")
+          li Weighted recommenders, which take the score produced by several recommenders and combine to produce a recommendation list for the user.
+
+          li Switching recommenders, which switch between different algorithms and use the algorithm expected to have the best result in a particular context.
+
+          li Mixed recommenders, which present the result of several recommenders together. This is similar to weighting, but the results are not combined in a single list.
+
+          li Feature-combining recommenders, which use multiple recommendation data sources as inputs to a single meta-recommender algorithm.
+
+          li Cascading recommenders chain the output of one algorithm into the input of another.
+
+          li Feature-augmenting recommenders, which use the output of one algorithm as the input of another.
+
+      p.content-normal.justify Based on this, I would like to propose a hybrid method that combines user-user, item-item, and content based approaches into a single collaborative recommendation:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px;")
+          li For a particular user to whom we want to provide recommendations, we find the neighborhood of the k users most similar to him.
+
+          li We then go over every item i that user u has rated and find the <i>k2</i> most similar items for that particular user, using as attributes only the users that are similar to <i>u</i>
+
+          li We then predict the items rating user u would have given item <i>i</i>, influenced by what the users most similar to u think of that particular item.
+
+      h3.content-title
+        b.second-title.third-title Implementation of User to User Collaborative Filtering
+
+      p.content-normal.justify Even though item-item collaborative filtering is clearly superior in many instances, I decided to implement a user-user approach. The similarity function used to compare users was Pearson’s correlation, and I used neighborhoods of k = 20 for every user.
+
+      small.content-normal.italify(style="color: #999") Python script to generate the recommender
+      pre(class="brush: py;")
+        = File.open("#{Rails.root}/public/data/collaborative.txt", 'rb') { |f| f.read }
+
+      h3.content-title(style="margin-top: 40px")
+        b.second-title.third-title Evaluating Results
+
+      p.content-normal.justify Evaluating the results of a user-user collaborative filtering algorithm was a little trick at first, since the model is not actually trained, but generated on execution. Moreover, according to the theory of how to evaluate ranking of items seen in class, calculating the Area Under the Curve seemed to be the logical method. However, when analyzing the data in question and the best method for evaluation, in this case the AUC did not make much sense because of the continuous nature of the algorithm predictions of ratings. While it would have been possible to assign discrete values, usually the AUC is generated based on the True Positive Rate and False Positive Rate, which only work when the prediction results are binary.
+
+      p.content-normal.justify Because of this, I decided to use a different evaluation mechanism for my collaborative filter: mean absolute error. This method simply takes the mean of the absolute difference between each prediction and rating for all held-out ratings of users in the test set. If there are n held out ratings, the MAE is calculated as:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 200px; margin-top: 10px;")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/item-item5.jpg", style: "padding: 10px; margin-left: 0; width: 200px; background: white;")
+
+      p.content-normal.justify MAE is in the same scale of the original ratings: on a 5-star scale represented as by integers [1,5], an MAE of 0.7 means that the algorithm was, on average, off by 0.7 stars. This is useful for evaluating the set in the particular context of its rating system.
+
+      p.content-normal.justify In order to calculate the MAE, I need to separate the ratings of a user in training and test set, and then let the model predict a rating for every movie in the test set and compare:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px;")
+          li For every user, his ratings were split into a training set (50%) and test set (50%)
+
+          li The predictions for every user were then calculated based on the ratings from the training set.
+
+          li From these predictions, I gathered only the movies that existed in the test set (ratings that exist for a user but that were not used to generate the predictions).
+
+          li For every user, we now have a list of predicted movie ratings, and the list of actual ratings.
+
+          li The MAE was then calculated. <b>Result: 0.75</b>
+
+      small.content-normal.italify(style="color: #999") Python script to evaluate the recommender
+      pre(class="brush: py;")
+        = File.open("#{Rails.root}/public/data/evaluation.txt", 'rb') { |f| f.read }
+
+
+      p.content-normal.justify(style="margin-top: 40px") The result of the MAE shows how the collaborative filter I implemented was off by 0.75 stars in rating. This is not bad at all!
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/collaborative_filtering.jpg" data-uk-lightbox="{group:'my-group'}" title="Example of Collaborative Filtering")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/collaborative_filtering_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/user-user-img.png" data-uk-lightbox="{group:'my-group'}" title="User - User Filtering")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/user-user-img_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/item-item-img.png" data-uk-lightbox="{group:'my-group'}" title="Item - Item Filtering")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/item-item-img_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+
+javascript:
+  SyntaxHighlighter.all()
+
