@@ -1,0 +1,160 @@
+import checkWordSplitting
+import checkSpecialCharacters
+import checkRandomNumbers
+import operator, random, sys
+import checkWordComposition
+import checkWordStructure
+import checkTheLength
+import checkCapitalizedWords
+import checkPatterns
+import numpy as np
+from scipy import stats
+
+#*********************************************
+# Sources for calculating the score:
+#
+# 1- check how many special characters are in the password
+# 2- check if a capital letter or other non alphanumeric character separates 2 words
+# 3- check if a password has numbers and randomized they are
+# 4- check for capital letters and how random their pattern look
+# 5- check for the length of the password and compare both to the others in the set and to the entire rockYou dataset
+# 6- compare the password against a list of likely patterns for passwords
+#*********************************************
+
+rockyouWords, freqs, max_freq = checkPatterns.readRockYou()
+
+# Function + "power" (influence in the score from 0 to 1)
+scoreFunctions = [
+  (checkSpecialCharacters.checkNumberOfSpecialChars, 1),
+  (checkWordSplitting.checkWordSplitting, 3),
+  (checkRandomNumbers.checkRandomNumbers, 5),
+  (checkWordComposition.getWordSplittingScore,3),
+  (checkWordStructure.checkWordStructure,5),
+  (checkTheLength.check_the_length_quick,1),
+  (checkCapitalizedWords.check_capitalized_words_quick,1)
+]
+
+rockyouWeight = 3
+
+
+def calculateScore(passwordList):
+  results = []
+  for i, line in enumerate(passwordList):
+    sys.stdout.write('\r%d/%d' % (i, len(passwordList)))
+    line = filter(lambda p: p, line) # skip empty passwords
+    scoreList = {}
+
+    # cluster passwords
+    groups = checkPatterns.getClusters(line)
+
+    # get a score for each password
+    for password in line:
+      score = 0
+      for f in scoreFunctions:
+        score += f[0](password) * f[1]
+      scoreList[password] = score
+
+    if len(groups) > 2:
+      # calculate score for frequency of similar rockyou word:
+      # for each group, get the rock
+      for group in groups:
+        ryScores = []
+        # majority vote out of at most 3, then apply score the rest in the group
+        for pw in group[:3]:
+          # score returns -1 if not in ry database, then we
+          # give score of 0 since it is likely to be the password
+          ryScore = checkPatterns.scoreRockYouDistance(pw, rockyouWords, freqs, max_freq)
+          ryScores += [rockyouWeight * ryScore if ryScore > 0 else 0]
+        group_ryScore = stats.mode(ryScores)[0][0]
+
+        # apply the score to members of the group
+        for pw in group:
+          scoreList[pw] += group_ryScore
+
+    # calculate group average scores and get group with best score
+    best_score, best_group = sys.maxint, []
+    for group in groups:
+      avg_score = np.mean([scoreList[hw] for hw in group])
+      if avg_score < best_score:
+        best_score = avg_score
+        best_group = group
+
+    # get the password with the best score
+    result = sorted([(pw, scoreList[pw]) for pw in best_group], key=lambda (pw, score): score)
+
+    min_score = result[0][1]
+    min_results = filter(lambda x: x[1] == min_score, result)
+    result = min_results[random.randrange(len(min_results))]
+    results.append(result)
+
+  results = map(lambda r: r[0], results)
+  return results
+
+def passwordList(filename, num_lines, num_sweetwords):
+  passwordList = []
+  counter = 0
+  with open(filename) as f:
+    for line in f:
+      if counter >= num_lines:
+        break
+      line = line.replace("\n", "").split(",")
+      line = line[:num_sweetwords]
+      passwordList.append(line)
+      counter += 1
+  return passwordList
+
+def generateOutput(filename, results, passwords):
+  output = ""
+  with open(filename, 'w') as outfile:
+    counter = 0
+    for index_result, result in enumerate(results):
+      for index_password, password in enumerate(passwords[index_result]):
+        if password == result:
+          if index_result == 0:
+            output += str(index_password+1)
+          else:
+            output += ","+str(index_password+1)
+          break
+    print("\n"+output)
+    outfile.write(output)
+
+
+def scoreResults(correctFilename, results):
+  with open(correctFilename) as f:
+    correct = 0
+    for i, line in enumerate(f):
+      if not line: continue
+      try:
+        if results[i] == line.rstrip():
+          correct += 1
+      except:
+        pass
+  return float(correct)/len(results), correct
+
+
+# passwords = passwordList("input_ry.txt")
+# results = calculateScore(passwords)
+
+# accuracy, correct = scoreResults('correct.txt', results)
+
+if __name__ == "__main__":
+
+        # default values
+        inpath = "input_ry.txt"
+        outpath = "output.txt"
+        num_honeywords = 10
+        num_lines=100
+
+        if len(sys.argv) >= 3:
+            # read inputs
+            num_honeywords = int(sys.argv[1])
+            num_lines = int(sys.argv[2])
+            inpath = sys.argv[3]
+        else:
+            print("\nMissing args! Using defaults.")
+        passwords = passwordList(inpath, num_lines, num_honeywords)
+        results = calculateScore(passwords)
+        generateOutput(outpath, results, passwords)
+
+
+

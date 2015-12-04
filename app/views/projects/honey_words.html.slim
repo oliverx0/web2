@@ -1,0 +1,137 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " HONEYWORDS GENERATOR"
+      h2(style="margin-bottom: 30px") DETECTING ATTACKERS IN A SYSTEM
+
+
+      p.content-normal.justify The most common mechanism used to protect users' passwords in a system is via hash functions. These functions "hide" the real password by taking them as an input and providing a unique, size-fixed output. Since it is computationally expensive to identify the original password given the hash, even if an attacker is able to breach the database and get the hashes, he wouldn't know the actual password of the user.
+
+      p.content-normal.justify The problem is that hash functions have proven not to be enough to protect a system. For a variety of reasons, attackers have been able to identify the original passwords from hash functions and access users' accounts in different systems (such as Evernote, Yahoo, LinkedIn, Ashley Madison, etc.).
+
+      p.content-normal.justify A proposed way to tackle this problem is with honeywords. The idea is the following: let's assume an attacker has been able to breach a database and reverse the hashes, obtaining the original users' passwords. If for every user the system actually stored 20 passwords, only one of which is valid, the moment the attacker used the wrong password the system would detect an attack. This could potentially stop the attacker from trying to breach the system, in fear of being caught. More information about honeywords can be found #{link_to 'here', 'https://people.csail.mit.edu/rivest/pubs/JR13.pdf', class: 'blue_link', target: '_blank'}.
+
+      p.content-normal.justify In this project, done with my classmates Brunno Atorre, Menjgue Wang, and Michael Wang, we created an algorithm for generating honeywords that look real to an adversary. This honeyword generation algorithm takes as an input a positive integer <i>n</i> and a true password <i>P</i> consisting of a string of up to 256 ASCII characters. It outputs a list P1, P2 ... Pn of exactly <i>n</i> sweetwords (honeywords + real password), exactly one of which is identical to <i>P</i>.
+
+      p.content-normal.justify Our task was to code up three algorithms that generate honeywords given a training set <i>T</i> (set of example passwords) without the use of other external datasets, one for each of the following cases:
+
+      h3.content-title
+        b.second-title.third-title T is the empty set (no example passwords)
+
+      p.content-normal.justify In this case, the different strategies my team and I came up with were:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px;")
+          li The resulting passwords should be of similar length to the length of the input password: this would make all passwords similar in length, making it difficult for the attacker to guess the real password.
+
+          li Using the L773 vocabulary to make the honeywords similar to the input password: for example, replacing Os with 0s. We additionally replace other specific characters by random ones.
+
+          li Chaffing by tweaking t digits: changing some of the digits in the password (the number of digits to change chosen randomly) would make the honeyworts very similar to the original password, yet difficult to detect which one is the real one. Moreover, even if the password does not have numbers, adding them to some honeywords in a random fashion could also help disguise the original password. Making that number mostly 1s could also help, since it is the one most users choose.
+
+          li Uppercasing and lowercasing randomly: this keeps the same structure and the generated passwords are very similar.
+
+          li Altering some characters in the password for a few honeywords: if we make a completely new honeyword with the same syntax model as the original password, it might be good enough to confuse the attacker. However we have to be careful with this, because it might be too obvious that it is not the original one.
+
+      small.content-normal.italify(style="color: #999") Code sample
+      pre(class="brush: py;")
+        = File.open("#{Rails.root}/public/data/gen.txt", 'rb') { |f| f.read }
+
+
+      h3.content-title(style="margin-top: 40px")
+        b.second-title.third-title T is the set of the 100 most common RockYou passwords
+
+      p.content-normal.justify In this case, we are given a set (the #{link_to 'RockYou Dataset', 'http://downloads.skullsecurity.org/passwords/rockyou-withcount.txt.bz2', class: 'blue_link', target: '_blank'}) from which we can create new honeywords instead of relying only on the original password. However, the fact that there are only 100 inputs to be used for the creation of the honeywords makes it counter-productive to simply use the default inputs as honeywords. The reasoning is the following: if the attacker is able to gain access to the database containing all passwords and their corresponding honeywords, he would be able to identify matching honeywords for different users, and in many cases be able to extract the original one.
+
+      p.content-normal.justify The following ideas come to mind:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px;")
+          li Based on the assumption mentioned above, a possible solution would be to add the input passwords as possible honeywords as well. That way, it would be impossible for an attacker to simply go through the passwords and determine which ones are honeywords and which ones are not.
+
+          li However, if the attacker posses an external list of possible passwords, it could still complicate things since our list is only of 100 passwords and he could determine which ones are not in it. Therefore, this strategy should be combined with most of the options mentioned in the empty set case.
+
+          li Grabbing honeywords from the list and randomly using the strategies mentioned on them to make the honeywords similar to the passwords from the RockYou database, but not exactly the same: for example, replacing Os with 0s. This is done multiple times for each password in the database. Since they are not exactly the same, the attacker cannot discard them.
+
+          li To make the process faster, we first verify if the input password is in the database. If it is, then we simply grab n passwords from the RockYou at random and make them honeywords.
+
+      small.content-normal.italify(style="color: #999") Code sample
+      pre(class="brush: py;")
+        = File.open("#{Rails.root}/public/data/genTop100.txt", 'rb') { |f| f.read }
+
+      h3.content-title(style="margin-top: 40px")
+        b.second-title.third-title T is the full RockYou dataset
+
+      p.content-normal.justify In this case, the fact that we are given the full RockYou dataset simplifies things a lot, since we don't have to change the possible honeywords due to an attacker possible having the list of possible passwords. Since the list is so long, it is almost impossible for the attacker to, even if he has the list, remove those passwords (because he would be removing potential valid passwords as well). In that sense the strategy would be:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px;")
+        li Every time an input is read, add it to RockYou database as another possible input.That way, it would be impossible for an attacker to simply go through the passwords and determine which ones are honeywords and which ones are not. The selection of passwords could be selected at random.
+
+        li A possible improvement here would be to use an entropy measure to determine how easy it is to guess the password and then choose from the RockYou database possible passwords with similar entropy.
+
+      small.content-normal.italify(style="color: #999") Code sample
+      pre(class="brush: py;")
+        = File.open("#{Rails.root}/public/data/genFull.txt", 'rb') { |f| f.read }
+
+
+      h3.content-title(style="margin-top: 40px")
+        b.second-title.third-title Cracking Honeywords
+
+      p.content-normal.justify After finishing our generation algorithms, we came up with attacks against them. That is, if we were the attackers and we were presented with a list of <i>N</i> honeywords, how likely would we be able to identify the real password?
+
+      p.content-normal.justify In order to do this, the idea behind our implementation was the generation of a score for each sweetword received. The score ranges from 0.0 (real)to 1.0 (fake). We generate this score by considering different properties that a real looking password would have, and in the case that the given seetword doesn’t have it, its score is incremented. We were able to obtain an accuracy close to 50% in some of our tests.
+
+      p.content-normal.justify At the beginning, we considered the possibility that a honeyword might have been generated from another one in the same set. We therefore clustered similar looking sweetwords. Given the clusters, we then generated a score for each sweetword in the cluster and calculated its mean. Once we found the most likely cluster, we returned the lowest score (most likely real password) of the words in the cluster. This clustering was performed using the Edit Distance function.
+
+      p.content-normal.justify In order to generate the score, the following factors were taken into account:
+
+      ul.content-normal.justify(style="margin-top: 10px; margin-bottom: 20px; list-style:decimal")
+        li <b>Check number of special characters</b>: the more non alpha-numeric characters in the password, the more likely it is fake.
+
+        li <b>Check if a special character or capital letter splits a password</b>: since a random algorithm would have a hard time splitting a password in real words and adding a random looking character at the first letter of each word, we also generated a score based on this possibility.
+
+        li <b>Check for random numbers</b>: if the password has numbers, we checked how random looking they were. This included checking if they were years, in order, in reverse, etc.
+
+        li <b>Check for the combination of words</b>: if a password is made out of real words, then it is very likely to be real.
+
+        li <b>Check for the number of capital letters</b>: this check how random looking capital letters are. If, for example, the entire password is capitalized then it is likely to be real. If it has random looking capital letters then it is not.
+
+        li <b>Check the length of the password</b>: we used the RockYou dataset to generate a distribution of the passwords lengths. Based on that and the frequency of each password, we determine what the length of a real looking password should be.
+
+        li <b>Check the structure of the password</b>: in this case we tried to see what regular expressions would most likely correspond to a real password. Based on whether a password met different regular expressions, the score was generated.
+
+        li <b>Check the structure of the password</b>: in this case we tried to see what regular expressions would most likely correspond to a real password. Based on whether a password met different regular expressions, the score was generated.
+
+      small.content-normal.italify(style="color: #999") Code sample
+      pre(class="brush: py;")
+        = File.open("#{Rails.root}/public/data/crack.txt", 'rb') { |f| f.read }
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Honeywords/honeywords.jpg" data-uk-lightbox="{group:'my-group'}")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Honeywords/honeywords.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Honeywords/honeywords1.jpg" data-uk-lightbox="{group:'my-group'}" title="Example of Honeywords in Database")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Honeywords/honeywords1_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+
+
+javascript:
+  SyntaxHighlighter.all()
+

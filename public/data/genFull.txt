@@ -1,0 +1,127 @@
+import sys, random, string
+import gen
+import similarity
+
+# ================ Init ================
+
+random.seed()
+
+# ================ Constants ================
+
+MAX_RANDNUMS = 3
+SIMILAR_WORD_THRESHOLD = 0.8
+MAX_WAIT = 100000
+
+
+#===============Rock you passwords ==================
+rockyouWords = []
+with open('rockyou-withcount.txt', 'r') as wordsfile:
+    try :
+        for line in wordsfile:
+            word_data = line.split()
+            if(len(word_data)>1):
+                rockyouWords.append(word_data[1])
+    except:
+        pass
+
+# After reading the top 100 RockYou passwords, we extend our list by applying the
+# techniques from the empty set case (gen.py). Just like that, our RockYou password
+# space expanded from 100 to 2100!
+# newWords = []
+# for word in rockyouWords:
+#     hws = gen.generate(word, 20)
+#     newWords.extend(hws)
+# rockyouWords.extend(newWords)
+# random.shuffle(rockyouWords)
+
+# ================ Generator ================
+
+"""
+Generate n honeywords given a password.
+
+Types of honeywords:
+1. variations of password
+ - numbers, letters
+ - dictionary word additions and subtractions
+2.
+
+"""
+
+
+def output_words(content, path):
+    with open(path, 'w') as outfile:
+        outfile.write(content)
+
+
+def appendToOutput(hws, content):
+    for word in hws:
+        word = word + ","
+        content = content + word
+    content = content + "\n"
+    return content
+
+if __name__ == "__main__":
+
+    # default values
+    inpath = "input.txt"
+    outpath = "output.txt"
+    num_honeywords = 10
+
+    if len(sys.argv) > 3:
+        # read inputs
+        num_honeywords = int(sys.argv[1])
+        inpath = sys.argv[2]
+        outpath = sys.argv[3]
+    else:
+        print("Missing args! Using defaults.")
+
+    with open(inpath) as f:
+        contentOutput = ""
+
+        # for every input word read, find all the words in thr RockYou databse similar to it
+        for line in f:
+            word = line.replace("\n","")
+            if word == "":
+                pass
+            else:
+                hws = [word]
+
+                if word not in rockyouWords:
+                    random.shuffle(rockyouWords)
+                    similar_words = []
+                    i = 0
+                    for rockYouword in rockyouWords:
+                        if similarity.get_similarity(word, rockYouword) > SIMILAR_WORD_THRESHOLD:
+                           similar_words.append(rockYouword)
+                        i += 1
+                        if len(similar_words) > (num_honeywords) or i > MAX_WAIT:
+                            break
+
+                    temp = similar_words + [word]
+                    for temp_word in temp:
+                        similar_words.extend(gen.generate(temp[random.randint(0, (len(temp)-1))], 2))
+                    similar_words = list(set(similar_words))
+
+                    while (len(similar_words) < (num_honeywords+1)):
+                        temp = similar_words + [word]
+                        similar_words.extend(gen.generate(temp[random.randint(0, (len(temp)-1))], 2))
+                        similar_words = list(set(similar_words))
+
+                else:
+                    similar_words = rockyouWords[:]
+
+                while len(hws) < num_honeywords:
+                    # if len(hw) >= (len(word) - 2) and len(hw) <= (len(word) + 2):
+                    hw = similar_words[random.randint(0, len(similar_words)-1)]
+                    similar_words.remove(hw)
+
+                    if hw not in hws:
+                        hws.append(hw)
+                for hw in hws:
+                    print(hw)
+                random.shuffle(hws)
+                print('\n')
+                contentOutput = appendToOutput(hws, contentOutput)
+
+    output_words(contentOutput, outpath)
+

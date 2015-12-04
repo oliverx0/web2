@@ -1,0 +1,129 @@
+import sys, random, string
+import gen
+
+# ================ Init ================
+
+random.seed()
+
+# ================ Constants ================
+
+MAX_RANDNUMS = 3
+
+
+#===============Rock you passwords ==================
+rockyouWords = []
+originalRockyouWords = []
+with open('rockyou-withcount.txt', 'r') as wordsfile:
+    i=0
+    try :
+        for line in wordsfile:
+            if i < 100:
+                word_data = line.split()
+                if(len(word_data)>1):
+                    rockyouWords.append(word_data[1])
+                    originalRockyouWords.append(word_data[1])
+                i+=1
+            else:
+                break
+    except:
+        pass
+
+# After reading the top 100 RockYou passwords, we extend our list by applying the
+# techniques from the empty set case (gen.py). Just like that, our RockYou password
+# space expanded from 100 to 2100!
+newWords = []
+for word in rockyouWords:
+    hws = gen.generate(word, 20)
+    newWords.extend(hws)
+rockyouWords.extend(newWords)
+originalRockyouWords.extend(newWords)
+random.shuffle(rockyouWords)
+
+# ================ Generator ================
+
+"""
+Generate n honeywords given a password.
+
+Types of honeywords:
+1. variations of password
+ - numbers, letters
+ - dictionary word additions and subtractions
+2.
+
+"""
+
+def output_words(content, path):
+    with open(path, 'w') as outfile:
+        outfile.write(content)
+
+
+def appendToOutput(hws, content):
+    for word in hws:
+        word = word + ","
+        content = content + word
+    content = content + "\n"
+    return content
+
+def checkQualityOfHoneyword(password, hw):
+    score = len(password) - len(hw)
+    score = score/(len(password)+len(hw))
+    return score
+
+def findInPasswordList(password):
+    return password in originalRockyouWords
+    # Alternative
+    #for rockyou in originalRockyouWords:
+    #    if checkQualityOfHoneyword(password, rockyou) < 0.1 :
+    #        return True
+    #    return False
+
+if __name__ == "__main__":
+
+    # default values
+    inpath = "input.txt"
+    outpath = "output.txt"
+    num_honeywords = 10
+
+    if len(sys.argv) > 3:
+        # read inputs
+        num_honeywords = int(sys.argv[1])
+        inpath = sys.argv[2]
+        outpath = sys.argv[3]
+    else:
+        print ("Missing args! Using defaults.")
+
+    with open(inpath) as f:
+        contentOutput = ""
+        inputList = []
+        hwsForRockYou = []
+
+        # for every input password, we first generate 20 possible honeywords
+        # that will be added to the rockyouWords list
+        for line in f:
+            hwsForRockYou.extend(gen.generate(line.replace("\n",""), 20))
+            inputList.append(line.replace("\n",""))
+        rockyouWords.extend(hwsForRockYou)
+        random.shuffle(rockyouWords)
+        print(rockyouWords)
+
+        # for every input word read, grab n-1 random honeywords from the
+        # rockYouWords list:
+        for word in inputList:
+            hws = [word]
+            while len(hws) < num_honeywords:
+                if findInPasswordList(word):
+                    hw = rockyouWords[random.randint(0, len(rockyouWords)-1)]
+                else:
+                    hw = gen.modifyWithHoneyword(word)
+                if hw not in hws:
+                    if checkQualityOfHoneyword(word, hw) < 0.5:
+                        hws.append(hw)
+
+            for hw in hws:
+                print(hw)
+            random.shuffle(hws)
+            print('\n')
+            contentOutput = appendToOutput(hws, contentOutput)
+
+    output_words(contentOutput, outpath)
+

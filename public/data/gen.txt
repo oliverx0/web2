@@ -1,0 +1,243 @@
+import sys, random, string
+from functools import *
+
+# ================ Init ================
+
+random.seed()
+
+# ================ Constants ================
+
+MAX_RANDNUMS = 3
+
+leetWordDictionary = {"a": "@", "@":"a", "s": "$","$":"s" ,"e": "3","3":"e", "t": "7", "7":"t", "o": "0","0":"o" ,"i": "|", "|":"i"}
+
+specialCharacters = ["$","!","@","#","$","%","&","*",".","?","~","-"]
+
+# ================ Generator ================
+
+"""
+Generate n honeywords given a password.
+
+Combination of:
+ - numbers randomization
+ - L337 speak
+ - upper and lower case
+"""
+def generate(password, n):
+    honeywords = [password]
+
+    # generate honeywords here and add them to the list
+    while len(honeywords) < n:
+        hw = modifyWithHoneyword(password)
+
+        # ensure the honeyword is different than the password
+        if hw not in honeywords:
+            honeywords += [hw]
+
+    # shuffle the results to randomize further
+    random.shuffle(honeywords)
+    return honeywords
+
+# Generate one honeyword given a password
+def modifyWithHoneyword(password):
+    hw = password
+    # iterate until honeyword is different than the password
+    while hw == password:
+        # Always randomize numbers since we don't want the 'real' numbers
+        # to be repeated or it will be easy to guess
+        hw = rand_nums(password)
+
+        # Always uppercase some letters since we lowercase the same
+        # proportion every time (at the bottom)
+        hw = upperCaseSomeLetters(hw)
+
+        # If the password contains special characters, randomize them:
+        hw = changeSpecialChars(hw)
+
+        # remove some random numbers
+        hw = removeRandNums(password,hw)
+
+        # mid/end chaffing
+        if random.random() < 1.0 / 3:
+            hw = chaffPassword(hw)
+
+        # l337 speak
+        if random.random() < 1.0 / 3:
+            hw = l337Speak(hw)
+
+        # lower case all with 1/4 prob
+        # ensures that every time, the same proportion of honeywords are all lowercase
+        if random.random() < 0.25:
+            if random.random() < 0.5:
+                hw = hw.lower()
+            else:
+                hw = hw.upper()
+
+    return hw
+
+# Uppercase random letter
+# Count the number of uppercase in original then
+# lowercase all then randomly uppercase the same number of letters as original
+def upperCaseSomeLetters(honeyword):
+    num_upper = 0
+    for char in honeyword:
+        if char.upper() == char and not is_digit(char):
+            num_upper += 1
+
+    # get indices to uppercase
+    indices = set(random.sample(set(range(0, len(honeyword))), num_upper))
+    honeyword = honeyword.lower()
+
+    result = ''
+    for i, char in enumerate(honeyword):
+        result += char.upper() if i in indices else char
+
+    return result
+
+def changeSpecialChars(honeyword):
+    result = []
+    for letter in honeyword:
+        if letter in specialCharacters:
+            result.append(specialCharacters[random.randint(0,len(specialCharacters)-1)])
+        else:
+            result.append(letter)
+    return ''.join(result)
+
+# check if a char is a digit
+def is_digit(c):
+    try:
+        int(c)
+        return True
+    except ValueError:
+        return False
+
+# def digits_only(password):
+
+
+# Add random numbers whereever numbers are located in a password
+# add a max of MAX_RANDNUMS or length of existing digits if longer
+# ensure that the new numbers are different than the old one(s)
+def rand_nums(password):
+    honeyword = password
+
+    i = 0
+    while i < len(honeyword):
+        if is_digit(honeyword[i]):
+            # find the length of this string of digits
+            j = i + 1
+            while j < len(honeyword) and is_digit(honeyword[j]):
+                j += 1
+            digits_len = j - i
+
+            # set number of digits to add
+            max_nums = max(MAX_RANDNUMS, digits_len)
+            num_randnums = random.randrange(max_nums) + 1
+
+            # generate the random digits and make sure they are different than the old ones
+            randnums = ''.join([str(random.randrange(10)) for k in range(num_randnums)])
+            while (randnums == honeyword[i:i + digits_len]):
+                randnums = ''.join([str(random.randrange(10)) for k in range(num_randnums)])
+
+            # add the new digits and replace the old ones
+            honeyword = honeyword[:i] + randnums + honeyword[i + digits_len:]
+            i += num_randnums
+        else:
+            # char is not a digit, skip it
+            i += 1
+        if(len(honeyword) <= 3 and len(password) >= 3):
+            honeyword = rand_nums(password)
+
+    return honeyword
+
+# Removes digits in the password
+# each digit has a 1/2 chance of being removed
+def removeRandNums(password,honeyword):
+    result = ''
+    if(password.isdigit()):
+        return honeyword
+    else:
+        for i, c in enumerate(honeyword):
+            if not (is_digit(c) and random.random() < 0.5):
+                result += c
+    return result
+
+# Add some random numbers to the middle
+def midChaffing(password):
+    num = random.randint(1, 3) # random number from 1-3
+    modifiedPassFirstPart = password[:int((len(password)/2))]
+    modifiedPassSecondPart = password[int(len(password)/2):]
+    return modifiedPassFirstPart + ''.join([str(random.randint(0, 9)) for i in range(num)]) + modifiedPassSecondPart
+
+# Add some random numbers to the end
+def endChaffing(password):
+    num = random.randint(1, 3) # random number from 1-3
+    return password + ''.join([str(random.randint(0, 9)) for i in range(num)])
+
+# Chaffing, add numbers either to the end or the middle of the password
+# 1/6 probability of end chaffing, 1/6 prob of mid chaffing
+def chaffPassword(password):
+    randomValue = random.randint(0,5)
+    if(randomValue == 1):
+        return midChaffing(password)
+    elif(randomValue == 3):
+        return endChaffing(password)
+    return password
+
+# Change letter according to the "L337 speak" vocabulary
+# In expectation 1 L337 eligible character will change
+def l337Speak(honeyword):
+    honeywordModified = ""
+    num_leet = 0
+
+    # find the number of eligible chars
+    for char in honeyword:
+        if char.lower() in leetWordDictionary:
+            num_leet += 1
+
+    for char in honeyword:
+        if char.lower() in leetWordDictionary:
+            if random.random() < 1.0/num_leet:
+                honeywordModified += leetWordDictionary[char.lower()]
+            else:
+                honeywordModified += char
+        else:
+            honeywordModified += char
+    return honeywordModified
+
+# output content to file
+def output_words(content, path):
+    with open(path, 'w') as outfile:
+        outfile.write(content)
+
+# Format the list of honeywords for output
+def appendToOutput(hws, content):
+    return content + ','.join(hws) + '\n'
+
+
+if __name__ == "__main__":
+
+    # default values
+    inpath = "input.txt"
+    outpath = "output.txt"
+    num_honeywords = 10
+
+    if len(sys.argv) > 3:
+        # read inputs
+        num_honeywords = int(sys.argv[1])
+        inpath = sys.argv[2]
+        outpath = sys.argv[3]
+    else:
+        print("Missing args! Using defaults.")
+
+    with open(inpath) as f:
+        contentOutput = ""
+        for line in f:
+            hws = generate(line.replace("\n",""), num_honeywords)
+            for hw in hws:
+                print(hw)
+            print('\n')
+            contentOutput = appendToOutput(hws, contentOutput)
+
+    output_words(contentOutput, outpath)
+
+

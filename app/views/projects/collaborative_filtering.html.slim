@@ -42,7 +42,7 @@ div(style="position: relative")
       p.content-normal.justify To generate predictions or recommendations for a user <i>u</i>, the collaborative filter first needs to find a neighborhood of users neighbors of <i>u</i>. Once the neighborhood <i>N</i> has been computed, the system combines the ratings of users in <i>N</i> to generate predictions for user <i>u</i>’s preference for an item <i>i</i>. This is typically done by computing the weighted average of the neighbors’ ratings using similarity as the weights.
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-left: 110px; margin-top: 10px;")
-          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/  user-user.jpg", style: "padding: 10px; margin-left: 0; width: 400px; background: white;")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Collaborative+Filtering/user-user.jpg", style: "padding: 10px; margin-left: 0; width: 400px; background: white;")
 
       p.content-normal.justify In the previous equation, subtracting the user’s mean rating <i>ru</i> compensates for the differences in users’ use of the rating scale (some users will tend to give higher ratings than others). The previous equation can also be extended to normalize user ratings to z-scores by diving the offset from the mean rating by the standard deviation of each user’s ratings, compensating therefore for users differing in rating spread as well as mean spread:
 

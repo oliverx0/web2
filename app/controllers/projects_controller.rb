@@ -23,4 +23,7 @@ class ProjectsController < ApplicationController
   def collaborative_filtering
   end
 
+  def honey_words
+  end
+
 end
