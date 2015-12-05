@@ -1,0 +1,170 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " ARDUINO SONAR"
+      h2(style="margin-bottom: 30px") Tiny radar system using a servo motor and an ultra-sonic range finder
+
+      p.content-normal.justify This project focuses on the implementation of a Sonar / Radar. It was done with my classmates Omri Saas and Muhammad Khadafi. The idea is to use a proximity sensor attached to a servo motor and have it scan a sector anywhere between 0 to 180 degrees from left to right and vice-versa, indicating at specified intervals the distance detected. Everything has been assembled in an acrylic box which has been cut using the laser cutter at Cornell Tech. The parameters by which the servo will rotate (starting point, ending point and interval) are provided via the Serial Monitor.
+
+      p.content-normal.justify  Finally, it is worth noting the use of an isolator to protect the Arduino from the motor’s higher voltage requirements.
+
+      / You can learn more about pallette #{link_to 'here', 'http://web.pallette.us', class: 'blue_link'} and #{link_to 'here', 'http://http://devpost.com/software/pallette', class: 'blue_link'}.
+
+      h3.content-title
+            b.second-title.third-title Requirements
+
+      p.content-normal.justify Our system had to:
+
+      ul.content-normal.justify(style="list-style: decimal")
+        li Take as input the left and right limits for the rotation in degrees, and the resolution in degrees via the serial terminal.  For example, entering "10,170,5" would mean rotate from 10 degrees to 170 degrees and take readings in 5 degree increments.
+
+        li Rotate the range finder as specified by the input.  Keep rotating left and right by the specified number of degrees until new inputs are entered.
+
+        li Take distance measurements (in millimeters) to the nearest solid object and the angle at which the measurements were taken and send them to the serial port.  Use the right most position to be 0 degrees, and the left most position to be 180 degrees.
+
+        li A reading of "0,20" should mean that there is something 2 centimeters away directly to the right. "90,35" would mean something directly in front of us at 3.5 centimeters. "180,40" means something to the left at 4 centimeters.
+
+      p.content-normal.justify We wanted to connect our readings with a third-party GUI that would display a more traditional radar screen like that of some air traffic control towers, and plot the data read from the serial input. Because of this, we needed to make sure that:
+
+      ul.content-normal.single-spacing.justify(style="list-style: decimal")
+        li The angle and distance should be an integer in ascii encoding.
+
+        li The angle and distance should be separated by a comma, with no spaces.
+
+        li The angle came first, the distance second.
+
+        li Each measurement should be separated by a '\r\n'. This could be done automatically by sending each observation with Serial.println().
+
+      p.content-normal.justify Finally, it is worth mentioning that we wanted our system to be mounted in a box, made out of acrylic using the laser cutter. We basically had to cut sheets that form the side of the box and glue them together. In that sense, certain considerations had to be made for the box:
+
+      ul.content-normal.single-spacing.justify(style="list-style: decimal")
+        li We had to design a mounting system to mount the servo inside the box so that it didn't move around
+
+        li We had to make a hole in the top where the sensor would stick out
+
+        li We had to take care to make the box the appropriate height so that the sensor would be on the outside of the box.
+
+        li Read the sensor's datasheet to ensure that your box would not show up on the radar
+
+        li Leave a hole for any wires needed to run the arduino (like the USB cable to the PC, and the DC power supply)
+
+        li Make sure there is enough room in the box for all of the components.
+
+        li Make sure we could get everything back out of the box.
+
+
+      h3.content-title
+            b.second-title.third-title Hardware Components
+
+      p.content-normal.justify The hardware components used for this project include:
+
+      ul.content-normal.single-spacing.justify(style="list-style: decimal")
+        li 1x HRLV-MaxSonar-EZ1 Ultrasonic Range Finder
+
+        li 1x 10uf Capacitor
+
+        li 1x 1uf Capacitor
+
+        li 1x 7805C 5V voltage regulator
+
+        li 1x Isolator
+
+        li 1x 9V power adapter
+
+        li 2x small breadboards
+
+        li 4x wires with female pin connectors
+
+        li 1x FS5106B High Torque Servo
+
+        li 1x 3D printed range finder mount
+
+      h3.content-title
+            b.second-title.third-title Software Description
+
+      p.content-normal.justify The basic components of the software are:
+
+      ul.content-normal.justify
+        li A Servo variable from the Servo.h library.
+
+        li Global variables that hold information about the serial input provided by the user, a readings array which stores the information for the rotation of the servo, and a delay variable that indicates how long the servo should wait before it counties to move.
+
+        li A setup function in which we simply activate the serial input and the PINs to which the servo and ultra-sonic range finder are connected.
+
+        li A loop function which:
+
+        ul
+          li Reads the user input in the form Number,Number,Number and passes it to the readings array.
+
+          li Once the input is read, the servo moves indefinitely in the provided readings until the user provides a new input. In case new input is received the sonar finishes it’s current sweep of the sector and only then starts the new sector.
+
+          li The MoveServo function takes care of the servo’s movement. It receives the inputs from the readings array and moves the servo in the specified degrees and interval. This is done using 2 loop functions (one from starting point to end point and the other vice versa).
+
+          li On each iteration of the loop function, the sensor (which is connected to the A7 analog port in the Arduino) provides a value indicating the distance to the nearest object. This value is then printed into the serial monitor alongside the current angle the sonar is pointed at. Distance is given in millimeters and angle is given in degrees where 0 is left and 180 is right.
+
+          li Due to time constraints, we did not connect the readings to the GUI. We later realized how simple the process was. More information can be found #{link_to 'here', 'https://github.com/seanogden/radar', class: 'blue_link', target: '_blank'}.
+
+
+
+
+      h3.content-title
+            b.second-title.third-title References
+
+      ul.content-normal.single-spacing.justify
+        li = link_to 'Arduino Servo Reference', 'https://www.arduino.cc/en/Reference/Servo ', class: 'blue_link', target: '_blank'
+
+        li = link_to 'Arduino Servo Tutorial', 'http://playground.arduino.cc/Learning/SingleServoExample ', class: 'blue_link', target: '_blank'
+
+        li = link_to 'HobbyTronics Servo Tutorial', 'http://www.hobbytronics.co.uk/arduino-tutorial2-servos', class: 'blue_link', target: '_blank'
+
+        li = link_to 'Ultrasonic Range Finder Datasheet', ' http://www.maxbotix.com/documents/HRLV-MaxSonar-EZ_Datasheet.pdf', class: 'blue_link', target: '_blank'
+
+      h3.content-title
+            b.second-title.third-title Code sample
+
+      pre(class="brush: cpp")
+        = File.open("#{Rails.root}/public/data/radar.txt", 'rb') { |f| f.read }
+
+
+
+
+
+      div.uk-margin-large-top
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://youtu.be/FNJ9z3Gay_U?t=23s" data-uk-lightbox="{group:'my-group'}" title="Video Showcasing Functionality" data-lightbox-type="image")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Sonar/sonar_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        - 3.times do |i|
+          a(href="https://s3-us-west-2.amazonaws.com/ojh22/Sonar/sonar#{i+1}.jpg" data-uk-lightbox="{group:'my-group'}")
+            li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Sonar/sonar#{i+1}_thumb.jpg", :alt => "rss feed", class: "photo-2")
+        end
+
+
+
+
+
+
+javascript:
+  SyntaxHighlighter.all()

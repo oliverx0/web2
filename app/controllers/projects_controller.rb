@@ -26,4 +26,7 @@ class ProjectsController < ApplicationController
   def honey_words
   end
 
+  def arduino_sonar
+  end
+
 end

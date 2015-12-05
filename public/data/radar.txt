@@ -1,0 +1,79 @@
+#include <Servo.h>
+
+Servo servoMain; // Define our Servo
+String str_serial;
+boolean valid = false;
+int readings[3]; //ServoFrom, ServoTo and Increments
+int globalDelay = 500;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  servoMain.attach(12); // servo on digital pin 10
+}
+
+void inputToArray(String input, int readings[3])
+{
+  int i = 0;
+  int indexComma = -1;
+  int indexPreviousComma = 0;
+  for(i = 0; i < 3; i++)
+  {
+    indexComma = input.indexOf(',', indexComma+1);
+    readings[i] = input.substring(indexPreviousComma, indexComma).toInt();
+    indexPreviousComma = indexComma+1;
+    Serial.println(readings[i]);
+  }
+}
+
+void moveServo(int from, int to, int increment)
+{
+    int i = 0;
+    for(i = from; i <= to; i += increment)
+    {
+
+        servoMain.write(i);   // Turn Servo (right) to i degrees
+        delay(globalDelay);   // Wait 1 second
+        int sensorValue = analogRead(A7);
+        int distance = (sensorValue * 5);
+        Serial.print(i);
+        Serial.print(",");
+        Serial.print(distance);
+        Serial.println();
+        // Possible improvement: read input here to break loop
+    }
+    for(i = to; i >= from; i -= increment)
+    {
+        servoMain.write(i);   // Turn Servo (left) to i degrees
+        delay(globalDelay);   // Wait 1 second
+        int sensorValue = analogRead(A7);
+        int distance = (sensorValue * 5);
+        Serial.print(i);
+        Serial.print(",");
+        Serial.print(distance);
+        Serial.println();
+        // Possible improvement: read input here to break loop
+    }
+}
+
+boolean validInput(String input)
+{
+  return true;
+}
+
+void loop() {
+
+  // put your main code here, to run repeatedly:
+   if (Serial.available() > 0) {
+      str_serial = Serial.readStringUntil('\n');
+      if (validInput(str_serial))
+      {
+        inputToArray(str_serial, readings);
+        valid = true;
+      }
+   }
+   if(valid == true)
+   {
+      moveServo(readings[0], readings[1], readings[2]);
+   }
+}
