@@ -155,7 +155,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla4.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla1.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla1.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 1 shows the number of checkins users have based on the number of friends they have. As it can be seen, there are outliers with people having over 14,000 friends. Therefore, it would make sense to consider the first few hundred first to see if any interesting trends can be identified:
 
@@ -164,7 +164,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla5.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla2.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla2.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 2 shows how people with any number of friends can have any number of checkins. However, we now want to see if there is a trend, that is, do people with more friends tend to <b>on average</b> to check in more?
 
@@ -173,7 +173,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla6.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla3.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla3.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 3 shows the number of checkins users have on average based on their number of friends. However, once again the outliers make it too complicated to make any conclusions. We narrow our view and filtering to people with 100 friends. We will now plot the data a little closer to see if there are any interesting results.
 
@@ -182,7 +182,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla7.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla4.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla4.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 4 shows much more interesting results! As it can be seen, there is a logarithmic trend for users to, on average, have an increased number of checkins based on the number of friends they have. Once the number of friends reaches around 50, however, the trend tends to slow down significantly.
 
@@ -191,7 +191,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla8.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla5.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla5.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 5 shows how on average users tend to have more checkins the greater their number of friends is. This trend however can only be considered until around 100 friends, after which the maximum number of checki-ns keeps increasing but there is so much variance that an average cannot be established. These results however are quite interesting! The next logical step is then determining for how much of the entire user population they apply to. In order to do that, we are going to check the density distribution of users based on the number of friends they have:
 
@@ -204,9 +204,9 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla9-result.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla6.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla6.jpg", style: "width: 100%; background: white; ")
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla7.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla7.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 6 and Figure 7 show the distribution of users based on the number of friends they have (Figure 7 shows them in logarithmic scale to visualize the results better). It can be seen how more than 95% of the users belong to the category of between 0 and 100 users. Because of this, the rest of our analysis will be based on this group of users.
 
@@ -221,7 +221,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla10.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla8.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla8.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 8 shows the number of active days users spent on the service compared to the number of friends they have. It can be seen, like in the previous check-in example, that users with any number of friends, tend to spend any number of active days in the service. We are therefore now going to show the average number of active days based on number of friends to see if we can find a trend:
 
@@ -230,7 +230,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla11.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla9.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla9.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 9 once again reveals an interesting trend: users with more friends tend to be more active in the service (at least for the first 30 friends).
 
@@ -257,7 +257,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla13.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla10.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla10.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 10 shows how the frequency of checkins on average based on the number of friends users gain over time. Once again, it is important to note the assumptions previously stated, and take these results with caution. Having said that, it can be seen that users tend to start using the service the most while they gain thier first few friends. As an example, users with only 5 friends made 20% of their checkins during that period. This amount increases to almost 50% for users with 10 friends, and then starts decreasing slowly until around 50 friends, where it stays steady. It is worth mentioning that after a certain point (50 friends) it would be expected for users' check-ins to continue declining, but its possible that this does not happen do to friends' influence.
 
@@ -278,7 +278,7 @@ div(style="position: relative")
           li Save the results
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla11.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla11.jpg", style: "width: 100%; background: white; ")
 
       div
       small.content-normal.italify(style="color: #999") Code Sample
@@ -292,7 +292,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla15.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla12.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla12.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify This is very interesting. Figure 12 basically shows that no social learning took place in the Gowalla Social Network. As it can be seen, when X = 0, the average frequency of check-ins is almost 100%, indicating therfore that most users don't consider whether their friends have check-in in order to do so themselves. This could be for a few reasons, including that check-ins might simply occur automatically every so often (like other Connective Media applications such as Swarm), or because users are not clearly shown that their friends have checked in, suggesting the need to improve the design of Gowalla.
 
@@ -324,7 +324,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla15.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla13.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla13.jpg", style: "width: 100%; background: white; ")
 
       p.content-normal.justify Figure 13 describes the distribution of readers and contributors in the social network. Looking at the image, it is easy to see what users are the ones who contribute the most (based on the contribution score previously shown). As an example, it can be seen that the user with the ID around 10,000 is the top contributor to the social network.
 
@@ -347,7 +347,7 @@ div(style="position: relative")
          = File.open("#{Rails.root}/public/data/gowalla15.txt", 'rb') { |f| f.read }
 
       figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
-          = image_tag("gowalla14.jpg", style: "width: 100%; background: white; ")
+          = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla14.jpg", style: "width: 100%; background: white; ")
 
       h3.content-title
         b.second-title.third-title Strong Ties and Weak Ties
