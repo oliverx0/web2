@@ -1,0 +1,54 @@
+for node in nodes:
+    #if node == 75:
+       # print nodes[node]['count_date']
+    if nodes[node]['connections'] <= 100:
+        friendships = {}
+        for friend in nodes[node]['friends_list']:
+            if 'first_checkin' in nodes[node]:
+                date1 = nodes[node]['first_checkin']
+                if 'first_checkin' in nodes[friend]:
+                    date2 = nodes[friend]['first_checkin']
+                    friendship_date = max(date1, date2)
+                else:
+                    date2 = "None"
+                    friendship_date = date1
+                if friendship_date not in friendships:
+                    friendships[friendship_date] = [friend]
+                else:
+                    friendships[friendship_date].append(friend)
+
+        nodes[node]['friendships_dates'] = friendships
+
+for node in nodes:
+    if nodes[node]['connections'] <= 100:
+        if 'friendships_dates' in nodes[node]:
+            if nodes[node]['friendships_dates'] != "None":
+
+                nodes[node]['friend_count_checkin'] = {}
+                got_all = False
+                friend_count = 0
+                friend_index = 5
+                sorted_fr_dates = sorted(nodes[node]['friendships_dates'])
+
+                for fr_date in sorted_fr_dates:
+                    #for friend_c in range():
+                        friend_count += len(nodes[node]['friendships_dates'][fr_date])
+                        if friend_count >= friend_index:
+                            checkin_count = 0
+                            for ck_date in nodes[node]['count_date']:
+                                if ck_date <= fr_date:
+                                    checkin_count += 1
+
+                            checkin_count2 = 0
+                            for friend_index2 in nodes[node]['friend_count_checkin']:
+                                checkin_count2 += nodes[node]['friend_count_checkin'][friend_index2]
+                            checkin_count = checkin_count - checkin_count2
+
+                            nodes[node]['friend_count_checkin'][friend_index] = checkin_count
+
+                            friend_index += 5
+
+                            if friend_index > nodes[node]['connections']:
+                                final_count = nodes[node]['number_of_checkins'] - (checkin_count + checkin_count2)
+                                if final_count > 0:
+                                    nodes[node]['friend_count_checkin'][friend_index] = final_count

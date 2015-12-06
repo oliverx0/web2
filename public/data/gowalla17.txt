@@ -1,0 +1,12 @@
+X = []
+Y = []
+
+for node in leaders:
+    X.append(node)
+    Y.append(leaders[node])
+
+max_y = max(Y)
+for i in range(len(Y)):
+    Y[i] = float(Y[i])/max_y
+
+plot(X,Y,"\nFigure 14  - Leaders of the Gowalla Social Network\n", "\nUser ID", "Leader Score\n", ".", max(X), max(Y))

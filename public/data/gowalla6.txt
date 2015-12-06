@@ -1,0 +1,6 @@
+Xavg = []
+Yavg = []
+for key in temp:
+    Xavg.append(key)
+    Yavg.append(sum(temp[key])/float(len(temp[key])))
+plot(Xavg,Yavg,"Figure 3  - Checkins vs Popularity", "Number of friends", "Number of checkins (AVG)", ".", max(Xavg), max(Yavg))

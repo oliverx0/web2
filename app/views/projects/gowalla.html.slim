@@ -1,0 +1,385 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " GOWALLA DATA ANALYSIS"
+      h2(style="margin-bottom: 30px") Detecting how connective media theories apply in a social network
+
+      p.content-normal.justify The success of Social Network Sites (SNS) heavily depends on the amount of active users who engage in the service and their contributions. It is common for many of these users to access SNSs with the sole purpose of benefiting from the contributions of a few. In that sense, the developers and designers of the services find it necessary to motivate users to contribute more content to the site. To keep the service alive the service must attract new users and keep the current ones engaged.
+
+      p.content-normal.justify Social behaviour theory is often applicable to Connective Media applications. Being able to identify the key concepts in these theories and how they apply both to the design and execution of a SNS would be highly benefitial to the developers behind them. More specifically it would help them gain insight into their users' behaviour and identify the areas in which their services can be improved.
+
+      p.content-normal.justify In this project we intend to use some of the Connective Media theories learned at Cornell tech to analyze the Gowalla Social Network and see how they apply. The theories we use, include:
+
+      ul.content-normal.justify
+        li Burke's work on <b>social learning</b>, which explains that <i>"from the perspective of a user, a social network site is primarily comprised of a set of friends and the content they produce. Therefore, one likely influence on newcomers’ behavior is the behavior of their friends. Social learning theory suggests that people learn by observation in social situations, and that they will begin to act like people they observe even without external incentives".</i>
+
+        p.content-normal.justify We are going to analyze the Gowalla Social Network and see if there is a direct influence on the motivation of users to contribute more based on what they observe in others.
+
+        li Peerce's work on the <b>Reader-to-Leader</b> framework, which categorizes users into <i>readers, contributors, collaborators, and leaders</i>. Based on this framework (adapting it of course to the social network in question), we would like to identify the key users (leaders) who are responsible for the motivation to contribute on most users of the <i>Gowalla Social Network</i> and who are the readers (who simply use the social network to get information from it).
+
+        li Granovetters's work on <b>strong ties and weak ties</b>, which explains how users are influenced by the information they receive from their weak ties (in many cases even more so than the information received from their strong ties). We are going to try and analyze what connections are most likely to be the weak ties in the social network as well as the strong ties.
+
+        / You can see all the source code #{link_to 'here', 'https://github.com/frahman5/ParallelAndDistributed/tree/master/lab2and3', class: 'blue_link', target: '_blank'}.
+
+      h3.content-title
+            b.second-title.third-title Data Overview
+
+      p.content-normal.justify The dataset on which our analysis will be carried out is the #{link_to 'SNAP\'s Gowalla Social Network dataset', 'http://snap.stanford.edu/data/loc-gowalla.html', class: 'blue_link', target: '_blank'}. #{link_to 'Gowalla', 'http://en.wikipedia.org/wiki/Gowalla', class: 'blue_link', target: '_blank'} was a location-based social networking website where users shared their locations by checking-in. The files provided in the dataset contain information over the period of Feb. 2009 - Oct. 2010 and include:
+
+      ul.content-normal.single-spacing.justify
+        li An undirected graph of the friendship network which was collected using their public API, and consists of 196,591 nodes and 950,327 edges.
+
+        li A total of 6,442,890 geo-tagged check-ins for each user.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Structure of the data
+
+      p.content-normal.justify Before beginning the analysis process we wanted to make sure that there were no problems accessing the files and then checking what the structure of the data looked like:
+
+      ul.content-normal.single-spacing.justify
+        li <b>Goalla's Graph Connections File (data/edges.txt)</b>: the colum structure of the file should be:
+
+        ul.content-normal.single-spacing.justify(style="list-style: decimal")
+          li The user ID
+          li The ID of her/his friend
+
+        small.content-normal.italify(style="color: #999") Code to read structure of edges
+        pre(class="brush: py;")
+           = File.open("#{Rails.root}/public/data/gowalla1.txt", 'rb') { |f| f.read }
+
+        small.content-normal.italify(style="color: #999") Result
+        pre(class="brush: py;")
+           = File.open("#{Rails.root}/public/data/gowalla1-result.txt", 'rb') { |f| f.read }
+
+        / figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        /   = image_tag("gowalla1.jpg", style: "width: 100%; background: white; ")
+
+        li(style="margin-top: 40px") <b>Goalla's Users' Check-ins File (data/checkins.txt)</b>: the colum structure of the file should be:
+
+        ul.content-normal.single-spacing.justify(style="list-style: decimal")
+          li The user ID
+          li Check-in time
+          li Check-in location's latitude
+          li Check-in location's longitude
+          li Check-in location's ID (found to be unique for evert lat/lon)
+
+        small.content-normal.italify(style="color: #999") Code to read structure of edges
+        pre(class="brush: py;")
+           = File.open("#{Rails.root}/public/data/gowalla2.txt", 'rb') { |f| f.read }
+
+        small.content-normal.italify(style="color: #999") Result
+        pre(class="brush: py;")
+           = File.open("#{Rails.root}/public/data/gowalla2-result.txt", 'rb') { |f| f.read }
+
+      h3.content-title
+        b.second-title.third-title Data Analysis
+
+      p.content-normal.justify Based on the Connective Media theories explained above we analyze the dataset for each theory accordingly:
+
+
+      ul.content-normal.justify
+        li <b>Social learning</b>:  is there a direct influence on the motivation of users to contribute more based on what they observe in others.
+
+        ul.content-normal.single-spacing.justify
+          li Determine whether the service is used more on average (by considering check-in frequency, i.e. the number of times users checked in) based on the amount of connections in a user's social network.
+
+          li Determine whether the service is used more on average (by considering the number of days users were active onthe service) based on the amount of connections in a user's social network.
+
+          li Determine whether users tend to progressively use the service more based on the number of friends they gain over time.
+
+          li Analyze how the check-in dynamic is influenced in terms of checking in all alone vs. with friends (Do users tend to check in moments after their friends checked in?)
+
+        li <b>Reader-to-Leader framework</b>: we want to identify the <i>readers, contributors, and leaders</i> in the Gowalla Social Network.
+
+        ul.content-normal.single-spacing.justify
+          li Identify the category to which a user belongs by analyzing the number of times users have checked in over the total time they were active in the network.
+
+          li In order to identify the leaders in the network, it is not so much about the number of times they have checked in over time but about the influence they have on others. In that sense, using the previous analysis of how the check-in dynamic is influenced by others, leaders would be the people that have the most influence on others.
+
+        li <b>Strong ties and weak ties</b>: we are going to try and analyze what connections are most likely to be the strong ties and weak ties in the social network.
+
+        ul.content-normal.single-spacing.justify
+          li Identify the strengh of a user connection by counting how many friends the 2 users have in common.
+
+          li Based on that strengh, determine which ones are strong and which ones are weak ties
+
+      p.content-normal.justify(style="margin-bottom: 20px")  Before proceeding to perform the data analysis, we are going to gather the variables we will most likely need for our analysis. These variables include:
+
+      ul.content-normal.single-spacing.justify
+          li User ID
+
+          li Number of friends
+
+          li Number of days between first and last check-in
+
+          li Number of active days a user has used the service
+
+          li Total number of check-ins for a user
+
+      small.content-normal.italify(style="color: #999") Variables Gathering
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla3.txt", 'rb') { |f| f.read }
+
+      h3.content-title(style="margin-top: 40px")
+        b.second-title.third-title Social learning
+
+      p.content-normal.justify Now that we have all our information loaded, we are going to see if there is a direct influence on the motivation of users to contribute more based on what they observe in others.
+
+      p.content-normal.justify Before proceeding, it is important to specify certain <b>constraints</b>. Identifying social learning in a dataset is limited by the data it contains. In order to identify the influence on the motivation of users to contributed based on the activity of others, it is necessary to have much more detailed information about the connectons between users. Our dataset only gives us information about 2 nodes becoming friends, but it does not specify when this friendship began in the Gowalla Social Network. It also does not contain information about when a user signed up to the service for the first time.
+
+      p.content-normal.justify Based on this, we make the following <b>assumptions</b> to be able to perform more interesting analysis:
+
+      ul.content-normal.single-spacing.justify
+          li The sign up date (and therefore the first time the users used the service) is considered to be the date of their first check-in.
+
+          li The date the users stopped using the service is considered to be the date of their last check-in.
+
+          li Users become friends the moment that both have joined the service. i.e. first time both users checked in (see above).
+
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Comparing number of check-ins to number of friends
+
+      p.content-normal.justify In order to do so the first thing we are going to do is analyze the number of check-ins users have based on the number of connections (friends). While this does not imply necessarily that users are checking in more because their friends are doing so, it does help establish a relationship based on that having more friends makes users tend to check in more:
+
+      small.content-normal.italify(style="color: #999") Check-ins vs Number of friends
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla4.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla1.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 1 shows the number of checkins users have based on the number of friends they have. As it can be seen, there are outliers with people having over 14,000 friends. Therefore, it would make sense to consider the first few hundred first to see if any interesting trends can be identified:
+
+      small.content-normal.italify(style="color: #999") Check-ins vs Number of friends
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla5.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla2.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 2 shows how people with any number of friends can have any number of checkins. However, we now want to see if there is a trend, that is, do people with more friends tend to <b>on average</b> to check in more?
+
+      small.content-normal.italify(style="color: #999") Check-ins vs Number of friends (AVG)
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla6.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla3.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 3 shows the number of checkins users have on average based on their number of friends. However, once again the outliers make it too complicated to make any conclusions. We narrow our view and filtering to people with 100 friends. We will now plot the data a little closer to see if there are any interesting results.
+
+      small.content-normal.italify(style="color: #999") Check-ins vs Number of friends (AVG) closer look
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla7.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla4.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 4 shows much more interesting results! As it can be seen, there is a logarithmic trend for users to, on average, have an increased number of checkins based on the number of friends they have. Once the number of friends reaches around 50, however, the trend tends to slow down significantly.
+
+      small.content-normal.italify(style="color: #999") Check-ins vs Number of friends (AVG) closer look
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla8.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla5.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 5 shows how on average users tend to have more checkins the greater their number of friends is. This trend however can only be considered until around 100 friends, after which the maximum number of checki-ns keeps increasing but there is so much variance that an average cannot be established. These results however are quite interesting! The next logical step is then determining for how much of the entire user population they apply to. In order to do that, we are going to check the density distribution of users based on the number of friends they have:
+
+      small.content-normal.italify(style="color: #999") Density distribution based on number of friends
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla9.txt", 'rb') { |f| f.read }
+
+      small.content-normal.italify(style="color: #999") Results
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla9-result.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla6.jpg", style: "width: 100%; background: white; ")
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla7.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 6 and Figure 7 show the distribution of users based on the number of friends they have (Figure 7 shows them in logarithmic scale to visualize the results better). It can be seen how more than 95% of the users belong to the category of between 0 and 100 users. Because of this, the rest of our analysis will be based on this group of users.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Comparing number of active days vs number of friends
+
+      p.content-normal.justify We are now going to consider whether the service is used more on average (based on the amount of active days users used the service) considering the amount of friends. This is different than the previous analysis in the sense that a user could have simply checked in many times the first day of the service regardless of the number of friends they had. Using this analysis, we can now see how much time users actively spent on the service based on their number of friends.
+
+
+      small.content-normal.italify(style="color: #999") Active Days vs Popularity
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla10.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla8.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 8 shows the number of active days users spent on the service compared to the number of friends they have. It can be seen, like in the previous check-in example, that users with any number of friends, tend to spend any number of active days in the service. We are therefore now going to show the average number of active days based on number of friends to see if we can find a trend:
+
+      small.content-normal.italify(style="color: #999") Active Days vs Popularity (AVG)
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla11.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla9.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 9 once again reveals an interesting trend: users with more friends tend to be more active in the service (at least for the first 30 friends).
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Determine whether users tend to progressively use the service the more they gain friends over time
+
+      p.content-normal.justify We are now going to analyze and check whether users tend to use the service more the more friends they gain. It is important to note that regardless of whether there is a correlation between the variables, causality should not be established. That is, even if it can be seen that users tend to use the service more the more friends they have, it could simply be because of the passage of time (since users increasingly gain more friends). We will however compare the 2 graphs (over time alone and over gaining friends) to see how they differ.
+
+      p.content-normal.justify The process of this analysis is the following:
+
+      ul.content-normal.single-spacing.justify
+          li For every user, we keep track of when he got to X amount of friends (X being in increments of 5).
+
+          li For every user, we then keep track of how many times he checked in after gaining X amount of friends.
+
+      small.content-normal.italify(style="color: #999") Code Sample
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla12.txt", 'rb') { |f| f.read }
+
+      p.content-normal.justify Now that we have gathered the information, we are going to normalize the results, in order to graph the average frequency of checkins based on when a user made X amount of friends:
+
+      small.content-normal.italify(style="color: #999") Code Sample
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla13.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla10.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 10 shows how the frequency of checkins on average based on the number of friends users gain over time. Once again, it is important to note the assumptions previously stated, and take these results with caution. Having said that, it can be seen that users tend to start using the service the most while they gain thier first few friends. As an example, users with only 5 friends made 20% of their checkins during that period. This amount increases to almost 50% for users with 10 friends, and then starts decreasing slowly until around 50 friends, where it stays steady. It is worth mentioning that after a certain point (50 friends) it would be expected for users' check-ins to continue declining, but its possible that this does not happen do to friends' influence.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title How is the check-in dynamic influenced in terms of checking in all alone vs friends?
+
+      p.content-normal.justify In other words, are people more likely to check-in after their friends did? In order to do this we are going to calculate the frequency of users checking-in after their friends checking-in, saving as well the number of friends that checked-in. The process therefore is the following:
+
+      ul.content-normal.single-spacing.justify
+          li For every user get his check-in times
+
+          li For every friend of the user get his check-in times
+
+          li Compare every check-in between them that occured within 10 minutes
+
+          li If they coincide add a count to the number of friends the user is checking in with
+
+          li Save the results
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla11.jpg", style: "width: 100%; background: white; ")
+
+      div
+      small.content-normal.italify(style="color: #999") Code Sample
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla14.txt", 'rb') { |f| f.read }
+
+      p.content-normal.justify(style="margin-top: 40px") Figure 11 represents the frequency of check-ins based on the number of friends that checked-in in the previous 10 minutes. While some interpretation of the data coult take place, we are now going to calculate the average to visualize the results more clearly and identify trends:
+
+      small.content-normal.italify(style="color: #999") Code Sample
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla15.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla12.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify This is very interesting. Figure 12 basically shows that no social learning took place in the Gowalla Social Network. As it can be seen, when X = 0, the average frequency of check-ins is almost 100%, indicating therfore that most users don't consider whether their friends have check-in in order to do so themselves. This could be for a few reasons, including that check-ins might simply occur automatically every so often (like other Connective Media applications such as Swarm), or because users are not clearly shown that their friends have checked in, suggesting the need to improve the design of Gowalla.
+
+      h3.content-title
+        b.second-title.third-title Reader-to-Leader Framework
+
+      p.content-normal.justify We are now going to analyze which users are considered readers, contributors and leaders in the <i>Gowalla Social Network</i>.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Identifying Readers and Contributors
+
+      p.content-normal.justify The process for identifying readers and contributors is actually quite simple:
+
+      ul.content-normal.single-spacing.justify
+          li Calculate the number of checkins users have in total (to see how much they have contributed)
+
+          li Calculate the number of active days users were in the social network (to see for how long they were active)
+
+          li Divide these amounts to obtain a <i>Contribution Score</i>
+
+          li Plot them across users to see what users have the highest and lowest scores
+
+          li The interpretation of who is a reader and who is a contributor is left to the person considering scores
+
+      p.content-normal.justify Fortunately, we already have all the information that we need:
+
+      small.content-normal.italify(style="color: #999") Readers and Contirbutors
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla15.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla13.jpg", style: "width: 100%; background: white; ")
+
+      p.content-normal.justify Figure 13 describes the distribution of readers and contributors in the social network. Looking at the image, it is easy to see what users are the ones who contribute the most (based on the contribution score previously shown). As an example, it can be seen that the user with the ID around 10,000 is the top contributor to the social network.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Identifying Leaders
+
+      p.content-normal.justify Identifying leaders is not as trivial, but fortunately from the information retrieved in previous analysis we can estimate who will be the leaders in the Gowalla Social Netowrk. We consider leaders to be the people who influence on others to contribute the most.
+
+      p.content-normal.justify The process for obtaining leaders was as follows:
+
+      ul.content-normal.single-spacing.justify
+          li Based on the analysis of how the check-in dynamic is influenced based on the contributions of other users, we added to a dictionary of leaders every node that contributed to the check-in of another person. In that sense, we then counted the number of times this occured for every potential leader, and once again decided to plot the results.
+
+          li We need to generate once again a leader score, dividing each number of users motivated to contribute by the potential leader by the highest score.
+
+          li The interpretation of what users are leaders are is left to the reader, though a threshold is suggested.
+
+      small.content-normal.italify(style="color: #999") Leaders
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla15.txt", 'rb') { |f| f.read }
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px; margin-top: 40px; width: 400px; margin-left: 20%;")
+          = image_tag("gowalla14.jpg", style: "width: 100%; background: white; ")
+
+      h3.content-title
+        b.second-title.third-title Strong Ties and Weak Ties
+
+      p.content-normal.justify We are now going to analyze the strong ties and weak ties in the Gowalla Social Network. The idea is simple: compare every connection of friends and see how many friends they have in common. This will generate a score that can be interpreted as to what ties are strong (the higher the score) and which ones are weak (the lower the score).
+
+      small.content-normal.italify(style="color: #999") Strong and Weak Ties
+      pre(class="brush: py;")
+         = File.open("#{Rails.root}/public/data/gowalla18.txt", 'rb') { |f| f.read }
+
+      p.content-normal.justify(style="margin-top: 40px") Now that the score for every tie has been identified, the next step would be visualizing the results. Unfortunately, due to time constraints we were not able to implement this, but the idea we had in mind can be seen #{link_to 'here', 'http://flowingdata.com/2014/03/05/find-new-beers-to-drink/', class: 'blue_link', target: '_blank'}.
+
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        - 14.times do |i|
+          a(href="https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla#{i+1}.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image")
+            li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Gowalla/gowalla#{i+1}_thumb.jpg", :alt => "rss feed", class: "photo-2")
+        end
+
+
+javascript:
+  SyntaxHighlighter.all()

@@ -1,0 +1,1 @@
+plot(X,Y,"Figure 2 - Checkins vs Popularity", "Number of friends", "Number of checkins", ".", 500,500)

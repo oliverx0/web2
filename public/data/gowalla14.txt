@@ -1,0 +1,58 @@
+#timedelta = 600 seconds, i.e. 10 minutes
+timedelta = 600
+
+#distancedelta = 500 meters, i.e. 0.5 km
+distancedelta = 0.5
+
+checkinwfriends = {}
+leaders = {}
+for node in nodes:
+    if 'count_date' in nodes[node] and nodes[node]['connections'] < 100:
+        checkinwfriends[node] = {}
+        for time in nodes[node]['count_date']:
+            friendCount = 0
+            friendCount2 = 0
+            for friend in nodes[node]['friends_list']:
+                if 'count_date' in nodes[friend]:
+                    for ftime in nodes[friend]['count_date']:
+                        # if abs((time-ftime).total_seconds()) < timedelta and get_distance(checkins[user][time][0],checkins[user][time][1],
+                        #     checkins[friend][ftime][0], checkins[friend][ftime][1]) < distancedelta:
+                        days_between = abs(cal_days_diff(time,ftime))
+                        if days_between > 1:
+                            break
+                        else:
+                            time_between = (time-ftime).total_seconds()
+                            if time_between <= timedelta and time_between > 0:
+                                friendCount += 1
+                                if friend not in leaders:
+                                    leaders[friend] = 1
+                                else:
+                                    leaders[friend] += 1
+
+            if friendCount not in checkinwfriends[node]:
+                checkinwfriends[node][friendCount] = 1
+            else:
+                checkinwfriends[node][friendCount] += 1
+
+
+#Number of friends checked in with
+X = []
+#Frequencies of occurence
+Y = []
+temp = {}
+#plotting
+for uid in checkinwfriends:
+    totalCheckins = nodes[uid]['number_of_checkins']
+    for friendCount in checkinwfriends[uid]:
+        try:
+            Y.append(checkinwfriends[uid][friendCount]/float(totalCheckins))
+            X.append(friendCount)
+        except:
+            pass
+
+        if friendCount in temp:
+            temp[friendCount].append(checkinwfriends[uid][friendCount]/float(totalCheckins))
+        else:
+            temp[friendCount] = [checkinwfriends[uid][friendCount]/float(totalCheckins)]
+
+plot(X,Y,"\nFigure 11  - Frequency of Checkins for a User after X friends checked in\n", "\nNumber of friends that checked in the 10 previous minutes", "Frequency of Check-ins\n", ".", max(X), max(Y)+0.1)

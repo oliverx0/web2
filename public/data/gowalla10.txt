@@ -1,0 +1,11 @@
+X = []
+Y = []
+
+for node in nodes:
+    #We now look only at our filtered data
+    if nodes[node]['connections'] < 100:
+        if 'number_of_active_days' in nodes[node]:
+            Y.append(nodes[node]['number_of_active_days'])
+            X.append(nodes[node]['connections'])
+
+plot(X,Y,"Figure 8  - Active Days vs Popularity", "Number of friends", "Number of active days", ".", max(X), max(Y))

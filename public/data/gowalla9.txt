@@ -1,0 +1,43 @@
+import math
+
+X = []
+Y = []
+Y_log = []
+
+# We know the max is around 16,000 connections
+buckets = {}
+bucket_size = 100
+max_bucket = 16000
+
+for i in xrange(0,max_bucket,bucket_size):
+    buckets[i] = 0
+    X.append(i)
+
+for node in nodes:
+    connections = nodes[node]['connections']
+    bucket_id = connections/100
+    bucket_id *= 100
+    buckets[bucket_id] += 1
+
+for value in X:
+    Y.append(buckets[value])
+    if buckets[value] != 0:
+        Y_log.append(math.log(buckets[value],10))
+    else:
+        Y_log.append(0)
+
+plt.figure()
+plt.bar(X,Y, width= 100)
+plt.title("Figure 6 -Distribution of users based on the number of friends\n\n")
+plt.xlabel("\nNumber of friends")
+plt.ylabel("Number of users\n")
+plt.figure()
+plt.bar(X,Y_log, width= 100)
+plt.title("Figure 7 - Distribution of users (log) based on the number of friends\n\n")
+plt.xlabel("\nNumber of friends")
+plt.ylabel("Number of users (log)\n")
+
+print "Buckets of X:\n"
+print X
+print "\nBuckets of Y:\n"
+print Y

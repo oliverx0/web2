@@ -1,0 +1,10 @@
+import os
+DIR_PATH = os.getcwd()  # Get currect directory
+N = 10                  # Number of data points to take
+
+# Open edges file and print to see structure
+f = open(DIR_PATH + os.sep + "data/edges.txt")
+for i in range(N):
+    line=f.next().strip().split('\t')
+    print line
+f.close()

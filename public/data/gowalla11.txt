@@ -1,0 +1,17 @@
+X = []
+Y = []
+temp = {}
+for node in nodes:
+    #We now look only at our filtered data
+    if nodes[node]['connections'] < 100:
+        if 'number_of_active_days' in nodes[node]:
+            if nodes[node]['connections'] not in temp:
+                temp[nodes[node]['connections']] = [nodes[node]['number_of_active_days']]
+            else:
+                temp[nodes[node]['connections']].append(nodes[node]['number_of_active_days'])
+
+for val in temp:
+    X.append(val)
+    Y.append(sum(temp[val])/len(temp[val]))
+
+plot(X,Y,"\nFigure 9  - Active Days (AVG) vs Popularity\n", "\nNumber of friends", "Number of active days (AVG)\n", ".", max(X), max(Y))

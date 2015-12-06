@@ -1,0 +1,19 @@
+ties = {}
+
+for node in nodes:
+    friends_list = nodes[node]['friends_list']
+    tie_value = 0
+    ties[node] = {}
+    for friend in friends_list:
+        if friend > node and friend in ties:
+            break
+        friends_list2 = nodes[friend]['friends_list']
+        for friend2 in friends_list:
+            if friend2 in friends_list2:
+                if friend != friend2:
+                    tie_value += 1
+
+        if friend not in ties[node]:
+            ties[node][friend] = tie_value
+        else:
+            ties[node][friend] += tie_value

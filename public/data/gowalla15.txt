@@ -1,0 +1,7 @@
+#Average
+Xavg = []
+Yavg = []
+for key in temp.keys():
+    Xavg.append(key)
+    Yavg.append(sum(temp[key])/float(len(temp[key])))
+plot(Xavg,Yavg,"\nFigure 12  - Frequency of Checkins for a User after X friends checked in\n", "\nNumber of friends that checked in the 10 previous minutes", "Frequency of Check-ins (AVG)\n", ".", max(Xavg), max(Yavg)+0.1)

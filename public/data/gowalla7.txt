@@ -1,0 +1,1 @@
+plot(Xavg,Yavg,"Figure 4  - Checkins vs Popularity", "Number of friends", "Number of checkins (AVG)", ".", 100, 110)

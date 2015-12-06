@@ -32,4 +32,7 @@ class ProjectsController < ApplicationController
   def image_filtering
   end
 
+  def gowalla
+  end
+
 end

@@ -1,0 +1,14 @@
+Y = []
+X = []
+
+for node in nodes:
+    if 'number_of_checkins' in nodes[node]:
+        if 'number_of_active_days' in nodes[node]:
+            X.append(node)
+            Y.append(float(nodes[node]['number_of_checkins'])/nodes[node]['number_of_active_days'])
+
+max_y = max(Y)
+for i in range(len(Y)):
+    Y[i] = Y[i]/max_y
+
+plot(X,Y,"\nFigure 13  - Readers and Contributors of the Gowalla Social Network\n", "\nUser ID", "Contribution Score\n", ".", max(X), max(Y))

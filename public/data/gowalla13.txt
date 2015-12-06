@@ -1,0 +1,20 @@
+X = []
+Y = []
+Y_dict = {}
+for i in range(5,105,5):
+    X.append(i)
+    Y_dict[i] = []
+
+for node in nodes:
+    if nodes[node]['connections'] <= 100:
+        if 'friend_count_checkin' in nodes[node]:
+            if 'number_of_checkins'in nodes[node]:
+                total_checkins = nodes[node]['number_of_checkins']
+                for i in range(5,105,5):
+                    if i in nodes[node]['friend_count_checkin']:
+                        Y_dict[i].append(float(nodes[node]['friend_count_checkin'][i])/total_checkins)
+
+for i in sorted(Y_dict):
+    Y.append(sum(Y_dict[i])/len(Y_dict[i]))
+
+plot(X,Y,"\nFigure 10  - Frequency of check-ins after having X number of friends\n", "\nNumber of friends gained over time", "Frequency of Check-ins(AVG)\n", ".", max(X), max(Y)+0.1)

@@ -1,0 +1,75 @@
+from datetime import datetime
+import time
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+UID = 0
+TIM = 1
+LAT = 2
+LON = 3
+LID = 4
+
+#Gets the number of days between 2 dates
+def cal_days_diff(a,b):
+    A = a.replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+    B = b.replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+    return (A - B).days
+
+#Get number of friends a node has
+def get_number_connections(filename, nodes):
+    with open(DIR_PATH + os.sep + filename, "rb") as input_data:
+        data = [line.strip().split('\t') for line in input_data]
+        for line in data:
+            node = int(line[0])
+            friend = int(line[1])
+            if node not in nodes:
+                nodes[node] = {}
+                nodes[node]['connections'] = 1
+                nodes[node]['friends_list'] = [friend]
+            else:
+                nodes[node]['connections'] += 1
+                nodes[node]['friends_list'].append(friend)
+    return None
+
+#Get number of days a user has been in the system
+def get_number_days(filename, nodes):
+    temp_nodes = {}
+    with open(DIR_PATH + os.sep + filename, "rb") as input_data:
+        data = [line.strip().split('\t') for line in input_data]
+        for line in data:
+            node = int(line[0])
+            if node not in temp_nodes:
+                temp_nodes[node] = {}
+                temp_nodes[node]['last'] = datetime.strptime(line[1], '%Y-%m-%dT%H:%M:%SZ')
+                temp_nodes[node]['first'] = datetime.strptime(line[1], '%Y-%m-%dT%H:%M:%SZ')
+                temp_nodes[node]['count'] = 1
+                temp_nodes[node]['count_date'] = [temp_nodes[node]['first']]
+                temp_nodes[node]['active_days'] = 1
+                temp_nodes[node]['check_ins'] = {}
+                temp_nodes[node]['check_ins'][temp_nodes[node]['last']] = [float(line[LAT]), float(line[LON])]
+            else:
+                prev = temp_nodes[node]['first']
+                temp_nodes[node]['first'] = datetime.strptime(line[1], '%Y-%m-%dT%H:%M:%SZ')
+                if prev.date() != temp_nodes[node]['first'].date():
+                    temp_nodes[node]['active_days'] += 1
+                temp_nodes[node]['count'] += 1
+                temp_nodes[node]['count_date'].append(temp_nodes[node]['first'])
+                temp_nodes[node]['check_ins'][temp_nodes[node]['first']] = [float(line[LAT]), float(line[LON])]
+
+
+    for node_val in temp_nodes:
+        num_days = cal_days_diff(temp_nodes[node_val]['last'],temp_nodes[node_val]['first'])
+        nodes[node_val]['number_of_days'] = num_days + 1
+        nodes[node_val]['number_of_checkins'] = temp_nodes[node_val]['count']
+        nodes[node_val]['number_of_active_days'] = temp_nodes[node_val]['active_days']
+        nodes[node_val]['first_checkin'] = temp_nodes[node_val]['first']
+        nodes[node_val]['last_checkin'] = temp_nodes[node_val]['last']
+        nodes[node_val]['count_date'] = sorted(temp_nodes[node_val]['count_date'])
+        nodes[node_val]['check_ins'] = temp_nodes[node_val]['check_ins']
+
+    return None
+
+nodes = {}
+get_number_connections('data/edges.txt', nodes)
+get_number_days('data/checkins.txt', nodes)
