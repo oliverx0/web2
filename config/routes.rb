@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get 'projects/collaborative_filtering' => 'projects#collaborative_filtering'
   get 'projects/honey_words' => 'projects#honey_words'
   get 'projects/arduino_sonar' => 'projects#arduino_sonar'
+  get 'projects/image_filtering' => 'projects#image_filtering'
 
   get '*path' => redirect('/')   unless Rails.env.development?
   # Example of named route that can be invoked with purchase_url(id: product.id)

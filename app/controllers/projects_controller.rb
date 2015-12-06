@@ -29,4 +29,7 @@ class ProjectsController < ApplicationController
   def arduino_sonar
   end
 
+  def image_filtering
+  end
+
 end

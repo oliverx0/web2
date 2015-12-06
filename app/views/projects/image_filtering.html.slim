@@ -1,0 +1,115 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " PARALLEL IMAGE FILTERING"
+      h2(style="margin-bottom: 30px") Using convolution to filter images via multiple threads using OpenMP
+
+
+      p.content-normal.justify This project was done with my friend Faiyam Rahman. Using the third party #{link_to 'OpenMP', 'http://openmp.org/wp/', class: 'blue_link', target: '_blank'} library, we built an application in C that reads a stencil (convolution matrix) from a file and applies it as a filter to an image. You can see all the source code #{link_to 'here', 'https://github.com/frahman5/ParallelAndDistributed/tree/master/lab4/part2', class: 'blue_link', target: '_blank'}.
+
+      h3.content-title
+            b.second-title.third-title Image filtering via convolution matrix
+
+      p.content-normal.justify Image filtering allows us to apply various effects to photos. They can be seen in applications such as Instagram and Photoshop. One way to apply filters to images is using convolution matrices. The idea is the following: we have a matrix (the stencil) with uneven sizes, such as 3x3, 5x5, 7x7, etc. We go over each pixel in the image and put the center of the stencil in the pixel, multiplying every element of the stencil by the element it is sitting on top of, and adding the results into the center pixel's value.
+
+      h3.content-title
+            b.second-title.third-title Using shared memory to execute processes in parallel
+
+      p.content-normal.justify Explicit parallel programming requires specification of parallel tasks along with their interactions. These interactions may be in the form of synchronization between concurrent tasks or communication of intermediate results.
+
+      p.content-normal.justify  In shared address architectures, communication is implicitly specified since some (or all) of the memory is accessible to all the processors. This allows for a much faster parallelization of a program using OpenMP, since indicating the number of threads (processes) to execute can separate the program quite easily. This comes however at the cost of having to be very careful with concurrency, since if 2 threads access and modify a variable at the same time, problems occur.
+
+      p.content-normal.justify For this project my teammate and I parallelized the process of filtering an image. When executing the program, the user specifies the number of processes to use (<i>n</i>). The image is divided in <i>n</i> columns, and each column assigned to a process. Since it is shared memory, all processes can access the entire image in parallel, but each one is responsible of applying the stencil and updating the pixels only in the column it owns.
+
+      h3.content-title
+            b.second-title.third-title Software Logic
+
+      p.content-normal.justify This section describes the code. It is worth noting that we used a JPG to PGM image converter to read images into our application, which allows us to easily access and modify the RBG values of every pixel. We then convert the modified image back into JPG. The logic of our software is as follows:
+
+      ul.content-normal.justify(style="list-style-type: decimal")
+        li First, it reads in the stencil (in PGM format) and applies a transformation on all PGM values such that all of of them (except for the max value M), map to between -4 and 4. This stencil is saved in a <i>struct</i>.
+
+        li We then take in an image as a jpg and via three functions, <i>jpegToPPM, readPPMP6, and convertPPMImagetoPPMImageMatrix</i>, transform the jpg into a usable format.
+
+        li <i>jpegToPPM</i> and <i>readPPMP6</i> are combined to read the jpeg information into a PPMImage struct, which is a struct with the following format:
+
+        ul.content-normal.single-spacing.justify(style="margin-top: 15px; margin-bottom: 20px;")
+          li PPMImage contains <i>int x, y, max</i> and <i>PPMPixel *data</i>.
+
+          li PPMPixel contains unsigned char red, green, blue.
+
+        li <i>convertPPMImageToPPMImageMatrix</i> then simply reformarts the ImageMatrix Struct into a struct that holds the data in a matrix format instead of an array format. That struct has the following shape:
+
+        ul.content-normal.single-spacing.justify(style="margin-top: 15px; margin-bottom: 20px;")
+          li PPMImageMatrix contains int x, y, max and PPMPixel **data
+
+        li After weve read in the stencil and the image, we apply the stencil to the image as many as times as the user indicated, with as many threads as the user indicated in the function <i>applyStencil</i>.
+
+        li <i>applyStencil</i> simply runs a for loop over the pixels in the image, and applies the stencil to each pixel. We used two openMP commands, parallel shared and for schedule to simply distribute the pixels evenly over the allotted threads. After writing serial code, parallelizing was surprisingly easy with the openMP library.
+
+      p.content-normal.justify To compile: <i>gcc -o filter -fopenmp filter.c io.c utils.c</i>
+
+      p.content-normal.justify To run: <i>./filter image.jpg stencil.pgm numThreads numRepetitionsOfStencil</i>
+
+      small.content-normal.italify(style="color: #999") Code Sample
+      pre(class="brush: java;")
+         = File.open("#{Rails.root}/public/data/filter.txt", 'rb') { |f| f.read }
+
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/original.jpg" data-uk-lightbox="{group:'my-group'}" title="Original" data-lightbox-type="image")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/original_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image1.jpg" data-uk-lightbox="{group:'my-group'}" title="Blur")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image1_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image2.jpg" data-uk-lightbox="{group:'my-group'}" title="Motion")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image2_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image3.jpg" data-uk-lightbox="{group:'my-group'}" title="Strong Sharpen")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image3_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image4.jpg" data-uk-lightbox="{group:'my-group'}" title="Sharpen")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image4_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image5.jpg" data-uk-lightbox="{group:'my-group'}" title="Edge Detection")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/image5_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+      div(style="border-left: 1px solid #bbb;
+      padding-left: 35px;
+      margin-top: 50px; margin-left: 16px")
+        h3.content-title
+          b.second-title.third-title References
+
+        ul.content-normal.single-spacing.justify
+          li = link_to 'Explanation of Image Filtering', 'http://lodev.org/cgtutor/filtering.html', class: 'blue_link', target: '_blank'
+
+          li = link_to 'Filters Used', 'https://docs.gimp.org/en/plug-in-convmatrix.html', class: 'blue_link', target: '_blank'
+
+          li = link_to 'OpenMP Library', 'http://openmp.org/wp/', class: 'blue_link', target: '_blank'
+
+          li = link_to 'Netpbm Image Format', 'https://en.wikipedia.org/wiki/Netpbm_format', class: 'blue_link', target: '_blank'
+
+javascript:
+  SyntaxHighlighter.all()

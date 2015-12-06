@@ -60,10 +60,11 @@ div(style="position: relative")
           figure.portfolio.uk-overlay.uk-overlay-hover
             = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Sonar/radar.jpg", class: "photo-big")
             figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Arduino Sonar
-        li
+
+        li = link_to projects_image_filtering_path,'data-no-turbolink' => true
           figure.portfolio.uk-overlay.uk-overlay-hover
-            = image_tag("thumbnail.jpg", class: "photo-big")
-            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Upcoming Project
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Image+Filtering/filter.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Parallelized Image Filtering
 
         li
           figure.portfolio.uk-overlay.uk-overlay-hover
