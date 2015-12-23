@@ -1,0 +1,112 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " BEACON APP"
+      h2(style="margin-bottom: 30px") Mobile app design using connective media theories
+
+
+      p.content-normal.justify This project was done with my classmate Jonathan Huang using #{link_to 'proto.io', 'http://http://proto.io', class: 'blue_link', target: '_blank'}. It is a design of an app (not actual implementation) using connective media theories. Beacon is an app that is part friend-finder, part group-organizer, and part location-tracker. At its core, Beacon is a platform that allows groups to organize around and keep track of one central meeting location - a “beacon” - for a limited amount of time. Users can create, join, and invite friends to (in-network) beacons, and beacon members can chat and share media within the group.
+
+      / You can learn more about pallette #{link_to 'here', 'http://web.pallette.us', class: 'blue_link'} and #{link_to 'here', 'http://http://devpost.com/software/pallette', class: 'blue_link'}.
+
+      p.content-normal.justify Where Beacon really shines is in the location-related awareness it brings to the group. “Beacons” are characterized by the relative locations of its’ different members -- with measurements for group member location radius (showing max-user distance) and density (average-user distance) in relation to the “center.” Users are constantly aware of the growing and shrinking size of the beacon, and have the ability to perform several location-relevant actions - instantly sharing exact-location with the group and one-touch navigating to the “center.” In our mind, we hope that Beacon can become the one-stop-shop for keeping groups together -- with no one left behind socially or physically.
+
+      h3.content-title
+            b.second-title.third-title Connective media theory application
+
+      p.content-normal.justify While designing the app, there were a few key Connective Media topics that we wanted to be sure to account for in order to make our vision for the app a reality:
+
+      ul.content-normal.justify
+        li Awareness:
+        ul.content-normal.single-spacing.justify
+          li Implicit in-beacon location sharing gives members a high-level awareness of the location-status of others in the group. Users have knowledge of how “spread out” the group is through the overall beacon radius and the average distance in the group.
+          li Explicit user-specific location sharing improves this to specific awareness on a per-user level.
+          li Using the “beacon” as an “origin” for the group gives users an awareness of a “home point” to reunite the group.
+          li Within a beacon, we believe that there are “beyond being there” signals in the idea that users can “visualize” and participate in other group members’ activities through media-sharing, chat, and location-knowledge.
+
+        li Perceived critial mass:
+        ul.content-normal.single-spacing.justify
+          li The home screen is designed to highlight users (who have shared location) and groups that you belong to conveys critical mass to the users.
+          li The feed (which promotes your friends’ beacons) gives users an idea of what they might be missing out on and helps direct users to other in-network users who might be using the app.
+
+        li Building small distinct communities:
+        ul.content-normal.single-spacing.justify
+          li Each beacon is a community where users know each others’ real identities. As the app is designed to allow users to share physical location (an action that requires a level of security and trust), the designers feel that users should be expected to share true identity (with no [pseudo]anonymity).
+          li Fundamentally, beacons are designed to be small, time-limited, and location-aware communities -- with easy location recovery built in.
+          li The combination of in-beacon messaging allows users to communicate and self organize creating a social groupware for its users. There are many applications where users can collaborate through the combined usage of messaging and location-sharing.
+
+        li Social awareness streams:
+        ul.content-normal.single-spacing.justify
+          li One of the primary features of our app is an Activity Feed (a social awareness stream) which presents the user all of the latest in-network activity.
+
+
+      h3.content-title
+            b.second-title.third-title Beacon App design
+
+      p.content-normal.justify Beacon has been designed on 4 main screens: Log In, Profile, Feed, and Home. Note that in the following screenshots, interactions are highlighted in blue.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Log in and register
+
+      p.content-normal.justify This is the first screen the user sees when launching the app. It lets the user log in with his Facebook Account, or through a created account in the app.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Home
+
+      p.content-normal.justify This is the first screen the user sees after logging in. It contains 2 main tabs: Map View, which allows the user to see all the current beacons he has in a map (providing the added benefit of being able to locate his friends) instantly), and List View, which is a more organized and easy to access list of the user’s beacons.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Feed
+
+      p.content-normal.justify This is the screen that shows up when a user taps on the Feed tab. It lets the user stay updated on the most current information about his friends and beacons. It is divided in 3 sections (that act as filters): All, Friends, and Beacons.
+
+      h4.content-title
+        b.second-title.third-title.fourth-title Profile
+
+      p.content-normal.justify This is the screen that shows when a user taps on the Profile tab. It contains 5 different options related to the user that can be accessed from the upper tabs: General, Friends, Beacons, and Settings.
+
+      ul.content-normal.single-spacing.justify
+        li The general tab shows information about the user.
+        li Tapping on the media arrow, shows more media form the user.
+        li The friends tab shows information about the user’s friends ad lets him add new friends.
+        li The add friends button shows the new friend requests the user has and lets him search for new friends.
+        li When looking to add a new friend, the user can view some information about the person depending on his privacy settings.
+        li The beacons tab lets the user see the beacons to which he belongs or has belonged to.
+        li Finally, the settings tab lets the user handle basic account settings and update information.
+
+
+      div.uk-margin-large-top
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        - 19.times do |i|
+          a(href="https://s3-us-west-2.amazonaws.com/ojh22/beacon/beacon#{i+1}.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image")
+            li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/beacon/beacon#{i+1}_thumb.jpg", :alt => "rss feed", class: "photo-2-vert")
+        end
+
+
+
+
+
+javascript:
+  SyntaxHighlighter.all()

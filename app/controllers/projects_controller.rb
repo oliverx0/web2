@@ -35,4 +35,7 @@ class ProjectsController < ApplicationController
   def gowalla
   end
 
+  def beacon
+  end
+
 end

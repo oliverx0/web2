@@ -65,14 +65,21 @@ figcaption.about{
 }
 
 .photo-2{
-      width: 130px;
+    width: 130px;
     height: 85px;
     background-color: #fafafa;
     border: 1px solid #bbb;
     border-radius: 5px;
 
 }
+.photo-2-vert{
+    width: 85px;
+    height: 130px;
+    background-color: #fafafa;
+    border: 1px solid #bbb;
+    border-radius: 5px;
 
+}
 .height-long{
 
   height: 100px;
