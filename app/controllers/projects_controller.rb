@@ -38,4 +38,7 @@ class ProjectsController < ApplicationController
   def beacon
   end
 
+  def social_data_explorer
+  end
+
 end

@@ -75,10 +75,10 @@ div(style="position: relative")
           figure.portfolio.uk-overlay.uk-overlay-hover
             = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/beacon/beacon.jpg", class: "photo-big")
             figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Beacon App
-        li
+        li = link_to explorer_path,'data-no-turbolink' => true
           figure.portfolio.uk-overlay.uk-overlay-hover
-            = image_tag("thumbnail.jpg", class: "photo-big")
-            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Upcoming Project
+            = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Social+Data+Explorer/social_data_explorer.jpg", class: "photo-big")
+            figcaption.portfolio.uk-overlay-panel.uk-overlay-background.uk-overlay-top.uk-overlay-slide-top Social Data Explorer
         li
           figure.portfolio.uk-overlay.uk-overlay-hover
             = image_tag("thumbnail.jpg", class: "photo-big")

@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   get 'projects/image_filtering' => 'projects#image_filtering'
   get 'projects/gowalla' => 'projects#gowalla'
   get 'projects/beacon' => 'projects#beacon'
-
+  get 'projects/social_data_explorer' => 'projects#social_data_explorer', as: 'explorer'
   get '*path' => redirect('/')   unless Rails.env.development?
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase

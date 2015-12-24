@@ -1,0 +1,76 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " SOCIAL DATA EXPLORER"
+      h2(style="margin-bottom: 30px") Understanding how words connect twitter followers
+
+
+      p.content-normal.justify This project was done with my classmate Brandon Plaster. It is an interactive web application that allows users to visualize their twitter network in an innovative way. Using images fetched from Instagram's public API, we show the relationship between a user and his followers based on the word that connects them the most. The images shown are a visual representation of this connection. You can find the source code #{link_to 'here', 'https://github.com/oliverx0/ConnectiveMedia-SocialDataExplorer', class: 'blue_link', target:'_blank'}.
+
+      / You can learn more about pallette #{link_to 'here', 'http://web.pallette.us', class: 'blue_link'} and #{link_to 'here', 'http://http://devpost.com/software/pallette', class: 'blue_link'}.
+
+      h3.content-title
+            b.second-title.third-title Data gathering process
+
+      ul.content-normal.single-spacing.justify
+        li Users log in with their Twitter and Instagram accounts
+        li We get between 30 and 100 of the twitter followers of the user
+        li We get 20 random tweets of both the user and his followers (20 per user)
+        li We iterate through the tweets and grab each word used for every user (we skip 'stop' words using the nltk library)
+        li We count the number of times each word is used in total by the user
+        li We generate a graph to illustrate the user's connections to his followers through words. In that sense, we show a link between the user and all the followers he shares his most common words with (based on the number of times he and the follower have both used that word in a tweet)
+        li For this graph we:
+        ul.content-normal.single-spacing.justify
+          li Grab the users’ twitter profile images and set it as the background to the nodes.
+          li We then grab an image from the user’s Instagram account that is tagged by the word in particular, in case there are none, we grab one from Instagram’s public data. This image is then displayed in the center of its related word-node.
+
+      h3.content-title
+            b.second-title.third-title Technologies used
+
+      p.content-normal.justify The technologies behind the project are:
+
+      ul.content-normal.single-spacing.justify
+        li D3JS for the graph visualization
+        li Flask Python server for deploying the application
+        li Tweepy API for Twitter
+        li Instagram’s API
+        li DigitalOcean Droplet
+
+      div#hello
+
+      div.uk-margin-large-top
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        - 3.times do |i|
+          a(href="https://s3-us-west-2.amazonaws.com/ojh22/Social+Data+Explorer/social_data_explorer#{i+1}.jpg" data-uk-lightbox="{group:'my-group'}" data-lightbox-type="image")
+            li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Social+Data+Explorer/social_data_explorer#{i+1}_thumb.jpg", :alt => "rss feed", class: "photo-2")
+        end
+
+
+
+
+
+javascript:
+  SyntaxHighlighter.all()
+
