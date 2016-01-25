@@ -1,0 +1,616 @@
+
+
+// Main Header
+= render 'layouts/header'
+div(style="position: relative")
+  div.uk-grid(style="background-color: #fbfbfb; padding-bottom: 100px;")
+    div.uk-width-1-6
+
+    div.uk-width-3-6(style="margin-left: -50px")
+      h1.content-title.project
+        = link_to "PROJECTS /", projects_path, 'data-no-turbolink' => true
+        strong = " NEURAL NETWORKS WEB APP"
+      h2(style="margin-bottom: 30px") A clustering and classification web application using kohonen neural networks with visualization in D3.js
+
+
+      p.content-normal.justify This machine learning application served as my final project as an undergraduate student at Francisco de Vitoria University. It consists of a web application that can train a kohonen neural network (self-organizing map) via unsupervised learning (generating different clusters with similar data points), and then classifying new, unseen data points by associating them with one of the exisiting clusters. It lets the user visualize the results using D3.js.
+
+      p.content-normal.justify The data is read from a file in different available formats, and once trained, the user can save the information of the neural network for further analysis or to reuse it. It also generates a PDF report with a summary of the results. Finally, the application handles multiple users at the same time, not being affected by the different operations performed.
+
+      p.content-normal.justify In this page I briefly summarize the development process. It is assummed that the reader is familiarized with the theory behind Kohonen Neural Networks. You can learn more about them #{link_to 'here', 'http://web.pallette.us', class: 'blue_link', target: '_blank'}.
+
+      h3.content-title
+            b.second-title.third-title Data Processing
+
+      p.content-normal.justify Now that the problem for this task has been addressed, the next part consist on identifying major terrorist attacks throughout history and words associated with terrorism. I decided to take on the search for terrorist attacks first in order to determine the distribution of attacks throughout history and identify the years range in which I would like to obtain my words count from.
+
+      p.content-normal.justify The #{link_to 'Global Terrorism Database', 'http://www.start.umd.edu/gtd/search/Results.aspx?start_yearonly=&end_yearonly=&start_year=1970&start_month=1&start_day=1&end_year=2013&end_month=12&end_day=31&asmSelect0=&asmSelect1=&dtp2=all&success=yes&casualties_type=b&casualties_max=', class: 'blue_link', target:'_blank'} provides a complete list of terrorist attacks occurred between 1970 and 2013. I intend to use the complete list for my analysis. The attributes I considered to be important for my analysis (or at least for consideration of whether they should be included) are the following:
+
+      ul.content-normal.single-spacing.justify
+        li <b>eventid:</b> represents the ID of the terrorist incident
+        li <b>iyear:</b> year in which the incident occurred
+        li <b>dateuncertain:</b> specifies whether the date of the event is certain (0 = No or 1 = Yes)
+        li <b>summary:</b> year in which the incident occurred
+        li <b>doubtterr:</b> indicates whether it is doubtful if the event was actually terrorism related (0 = No or 1 = Yes or -9 = Unknown)
+        li <b>country:</b> indicates the numerical ID of the country in which the event occurred
+        li <b>city:</b> indicates the city in which the event occurred
+        li <b>nkill:</b> total number of fatalities
+        li <b>nwound:</b> total number of injured survivors
+        li <b>property:</b> indicates if there was property damage (0 = No or 1 = Yes or -9 = Unkown)
+
+      p.content-normal.justify Now I can proceed to analyzing the data. Since the format it comes in is <i>xls</i>, the first thing I did was format it to <i>csv</i>. I then created a python script to plot the attacks and see how they are distributed across time. In that sense, the only variable needed was <i>iyear</i>. I iterated through all the elements in the terrorist_attacks.csv file and created a dictionary to count the number of terrorist attacks per year.
+
+      small.content-normal.italify(style="color: #999") Python script to plot the attacks distribution
+
+      pre(class="brush: py; collapse: true")
+        = File.open("#{Rails.root}/public/data/terrorist_analysis1.txt", 'rb') { |f| f.read }
+
+      p.content-normal.justify(style="margin-top: 30px") The results were the following:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/terrorist_attacks_distribution.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify This representation is very helpful as it provides a great overview of the data. In particular, it can be seen how the dataset does not contain information of terrorist attacks occurring in 1993 (or it simply indicates that no attacks occurred during that time, which is very unlikely). It also shows that the year range I will be analyzing is from 1970 to 2013.
+
+      p.content-normal.justify After looking more carefully at the parameters, I decided to also remove from the data those attacks that were not certain to be terrorist attacks using the <i>doubtter</i> parameter. The distribution did not vary.
+
+      p.content-normal.justify While this initial impression is great, more things need to be considered. What I am looking for is major terrorist attacks throughout history. In that sense, I am now going to plot only the greatest terrorist attack per year. But how can I determine that? There are a few interesting points in the dataset that can help:
+
+      ul.content-normal.single-spacing.justify
+        li The number of people killed might be a good estimator of the impact of an attack
+        li The number of people injured might also be a good estimator of impact
+        li The property damage caused by the attack can also help determine monetary impact. This last value however is problematic, since it is not a necessarily a numeric one. This would require data cleaning, and since the other 2 values seem to be more than enough to determine impact, for this case I am going to leave this one aside.
+
+
+      p.content-normal.justify The impact can then be determined by the attack with the greatest combination of people killed and people injured during the attack. Plotting the major attacks yields the following result:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/major_terrorist_attacks_distribution.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify The above figure can help me determine what would make the major terrorist attacks throughout history. I have decided to pick only those attacks which have a combination of killed and wounded greater than 600:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/true_major_terrorist_attacks.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify Finally, I now have a list of the greatest terrorist attacks throughout history:
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Summary of the major terrorist attacks throughout history. Source: Global Terrorism Database
+        thead
+          tr
+            th Year
+            th Country
+            th Attack Description
+            th People killed/wounded
+
+        tbody
+          tr
+            th 1982
+            th Iran
+            th Unknown
+            th 760
+          tr
+            th 1984
+            th USA
+            th Unknown
+            th 751
+          tr
+            th 1992
+            th Tajikistan
+            th Unknown
+            th 800
+          tr
+            th 1995
+            th Japan
+            th Subway Sarin Incident
+            th 5513
+          tr
+            th 1996
+            th Sri Lanka
+            th Talim Tigers Attack
+            th 1362
+          tr
+            th 1998
+            th Kenya
+            th Al Qaeda attack in US embassy
+            th 4224
+          tr
+            th 2001
+            th USA
+            th Al Qaeda attack 9/11
+            th 1382
+
+          tr
+            th 2004
+            th Russia
+            th School Taking
+            th 1071
+          tr
+            th 2005
+            th Iraq
+            th Baghdad bombings
+            th 702
+          tr
+            th 2006
+            th India
+            th Train bombings by Lashkar e-Taiba
+            th 1004
+
+          tr
+            th 2007
+            th Iraq
+            th Vehicle Bombs
+            th 1000
+          tr
+            th 2008
+            th Chad
+            th Rebels Attack
+            th 1161
+          tr
+            th 2009
+            th Iraq
+            th Vehicle Borne Improvised Explosive Device
+            th 664
+
+      h3.content-title
+            b.second-title.third-title Identifying key words related to terrorism
+
+      p.content-normal.justify Now that the problem of finding the data for terrorist attacks has been addressed, the next part consist on identifying the words that are going to be used. The Department of Homeland Security has been forced to release a list of keywords and phrases it uses to monitor social networking sites and other online media for signs of terrorists or other threats against the U.S. This list can be located #{link_to 'here', 'http://www.dailymail.co.uk/news/article-2150281/REVEALED-Hundreds-words-avoid-using-online-dont-want-government-spying-you.html', class: 'blue_link', target:'_blank'}.
+
+      p.content-normal.justify I also found the #{link_to 'Terrorism Vocabulary Word List', 'https://myvocabulary.com/word-list/terrorism-vocabulary/', class: 'blue_link', target:'_blank'}, which contains a more complete list of words associated to terrorism. Finally, the #{link_to 'thesaurus.com', 'https://thesaurus.com', class: 'blue_link', target:'_blank'} also provides a few words related to terrorism which will be used.
+
+
+      h3.content-title
+            b.second-title.third-title Obtaining the complete dataset to analyze
+
+      p.content-normal.justify Once the words related to terrorism have been identified, I need to obtain the count for all the words in every year. In order to obtain a dataset big enough to perform some interesting calculations, I decided to obtain the word count from 1800 to 2008 (latest possible year in Google Ngram). Even though terrorist attacks only started occurring around the 1970s, I figured it would be a good idea to have data that was not related to terrorist attacks whatsoever to help my model learn as much as possible.
+
+      p.content-normal.justify In order to obtain the information from the Google Ngram dataset, I first tried used the google-ngram-downloader python API. It helps query the Ngram dataset given certain parameters, which facilitates the process by not having to manually download the files. After a few of hours of trying however, I realized that iterating over the entire data set took way too long, so I decided to manually download the files from a to z.
+
+      p.content-normal.justify I then iterated over those files and found the count for every 1-gram in every year. Due to time constraints, I ignored the 2-grams and 3-grams from the results.json with count 0, as the hassle of having to download the necessary files for just a few ngrams was simply not worth it.
+
+      small.content-normal.italify(style="color: #999") Python script to analyze the ngrams
+      pre(class="brush: py; collapse: true")
+        = File.open("#{Rails.root}/public/data/ngrams.txt", 'rb') { |f| f.read }
+
+
+      h3.content-title(style="margin-top: 30px")
+            b.second-title.third-title Visualizing Results
+
+      p.content-normal.justify Now that I was able to obtain the count for every word per year, its time to visualize the data. Since I am analyzing over 500 words, one single plot would result too complicated to understand. Because of this, I iterated over every word and generated a plot every 5 words. I plotted the data both in terms of distribution across time and as a normalized parameter between 0 and 1 in a given year based on the count of other words. <b>Please note that ngrams greater than 1 were not counted and are therefore shown as 0.</b>
+
+      p.content-normal.justify Example of distribution accross time for 5 words:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_1.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify Normalization between 0 and 1:
+
+      figure.portfolio.uk-overlay.uk-overlay-hover.nothing(style="margin-bottom: 30px")
+        = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_norm1.jpg", style: "width: 100%; padding: 10px; background: white; ")
+
+      p.content-normal.justify As it can be seen in the examples, the distribution as a set of words across time shows how much the usage of a word has evolved through time, while the normalization of word count between 0 and 1 shows the usage of a word in a given year compared to the rest. For the model building and analysis, it makes more sense to use the latter.
+
+      h3.content-title(style="margin-top: 30px")
+            b.second-title.third-title Building the Model
+
+      p.content-normal.justify The first thing that needs to be considered before building the model is the type of model I want. I have decided to go with a <b>supervised</b> approach, since I know the years in which major terrorist attacks occurred. Another possibility however would have been to do an unsupervised approach based on clustering, and once the clusters have been generated, compare the data points to see if they match a particular event.
+
+      p.content-normal.justify In that sense, my data points are going to be the years, each one of which contains the word count of every word as a parameter (normalized from 0 to 1), and the then the class label would be YES or NO, based on whether there was a terrorist attack on a given year. The problem however is that it is possible that people start talking more and more about an event years after it occurred, so it would make sense to classify a year as YES if it comes after a major attack.
+
+      p.content-normal.justify In order to tackle this, I will classify a given year as YES if any of the following conditions apply:
+
+      ul.content-normal.single-spacing.justify
+        li There was a major terrorist on that year. <b>Assumption:</b> people will talk about a terrorist attack in the year that it occurred. Therefore the word count in that year will be related to it.
+
+        li There was a major terrorist attack on the previous year. <b>Assumption:</b> people will talk about a terrorist attack in the year after it occurred. Therefore the word count in the year after will also be related to it.
+
+        li There was a major terrorist attack on the previous 2 years and the impact of the attack (number of killed + wounded) is greater than 1000. <b>Assumption:</b> people will talk about a terrorist attack 2 years after it occurred if it had a great impact. Therefore, the word count in that year will be related to it.
+
+      p.content-normal.justify I understand that this heuristic might not be perfect, and that my assumptions could be wrong. It also makes my model biased towards those assumptions.
+
+      p.content-normal.justify After analyzing the data points from 1800 to 2008, it was clear based on the results that the models were over trained to negative responses. Because of this, I then decided to train them with the data from 1935 to 2009. The code is provided below:
+
+      small.content-normal.italify(style="color: #999") Python script to train the model
+      pre(class="brush: py; collapse: true")
+        = File.open("#{Rails.root}/public/data/model.txt", 'rb') { |f| f.read }
+
+      p.content-normal.justify(style="margin-top: 30px") The data split was done using the train_test_split function from the sklearn library. Using a data set divided between a training set (65%) and a test set (35%), and using many different classifiers to see which one was the most accurate. While different executions of the program yielded different results (probably because the separation of the test and train data is random), a few times the set of results were the following:
+
+      h3.content-title(style="margin-top: 30px")
+            b.second-title.third-title Results - Stochastic Gradient Descent
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Accuracy: 92.31%
+        thead
+          tr
+            th Summary
+            th Precision
+            th Recall
+            th F1 Score
+            th Support
+
+        tbody
+          tr
+            th
+              b No
+            th 1.00
+            th 0.90
+            th 0.95
+            th 20
+          tr
+            th
+              b Yes
+            th 0.75
+            th 1.00
+            th 0.86
+            th 6
+          tr
+            th
+              b AVG / Total
+            th 0.94
+            th 0.92
+            th 0.93
+            th 26
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Confusion Matrix
+        thead
+          tr
+            th Class Labels
+            th NO
+            th Yes
+
+        tbody
+          tr
+            th
+              b NO
+            th 18
+            th 2
+          tr
+            th
+              b YES
+            th 0
+            th 6
+
+      h3.content-title(style="margin-top: 30px")
+            b.second-title.third-title Results - Linear SVC
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Accuracy: 76.92%
+        thead
+          tr
+            th Summary
+            th Precision
+            th Recall
+            th F1 Score
+            th Support
+
+        tbody
+          tr
+            th
+              b No
+            th 0.77
+            th 1.00
+            th 0.87
+            th 20
+          tr
+            th
+              b Yes
+            th 0.00
+            th 0.00
+            th 0.00
+            th 6
+          tr
+            th
+              b AVG / Total
+            th 0.59
+            th 0.77
+            th 0.67
+            th 26
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Confusion Matrix
+        thead
+          tr
+            th Class Labels
+            th NO
+            th Yes
+        tbody
+          tr
+            th
+              b NO
+            th 20
+            th 0
+          tr
+            th
+              b YES
+            th 6
+            th 0
+
+      h3.content-title(style="margin-top: 30px")
+            b.second-title.third-title Results - SVC Kernel
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Accuracy: 92.31%
+        thead
+          tr
+            th Summary
+            th Precision
+            th Recall
+            th F1 Score
+            th Support
+
+        tbody
+          tr
+            th
+              b No
+            th 1
+            th 0.90
+            th 0.95
+            th 20
+          tr
+            th
+              b Yes
+            th 0.75
+            th 1.00
+            th 0.86
+            th 6
+          tr
+            th
+              b AVG / Total
+            th 0.94
+            th 0.92
+            th 0.93
+            th 26
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Confusion Matrix
+        thead
+          tr
+            th Class Labels
+            th NO
+            th Yes
+        tbody
+          tr
+            th
+              b NO
+            th 18
+            th 2
+          tr
+            th
+              b YES
+            th 0
+            th 6
+
+      h3.content-title(style="margin-top: 30px")
+            b.second-title.third-title Results - Perceptron L1
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Accuracy: 92.31%
+        thead
+          tr
+            th Summary
+            th Precision
+            th Recall
+            th F1 Score
+            th Support
+
+        tbody
+          tr
+            th
+              b No
+            th 1
+            th 0.90
+            th 0.95
+            th 20
+          tr
+            th
+              b Yes
+            th 0.75
+            th 1.00
+            th 0.86
+            th 6
+          tr
+            th
+              b AVG / Total
+            th 0.94
+            th 0.92
+            th 0.93
+            th 26
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Confusion Matrix
+        thead
+          tr
+            th Class Labels
+            th NO
+            th Yes
+        tbody
+          tr
+            th
+              b NO
+            th 18
+            th 2
+          tr
+            th
+              b YES
+            th 0
+            th 6
+
+      h3.content-title(style="margin-top: 30px")
+            b.second-title.third-title Results - Perceptron L2
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Accuracy: 96.15%
+        thead
+          tr
+            th Summary
+            th Precision
+            th Recall
+            th F1 Score
+            th Support
+
+        tbody
+          tr
+            th
+              b No
+            th 0.95
+            th 1.00
+            th 0.98
+            th 20
+          tr
+            th
+              b Yes
+            th 1
+            th 0.83
+            th 0.91
+            th 6
+          tr
+            th
+              b AVG / Total
+            th 0.96
+            th 0.96
+            th 0.96
+            th 26
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Confusion Matrix
+        thead
+          tr
+            th Class Labels
+            th NO
+            th Yes
+        tbody
+          tr
+            th
+              b NO
+            th 20
+            th 0
+          tr
+            th
+              b YES
+            th 1
+            th 5
+
+      h3.content-title(style="margin-top: 30px")
+            b.second-title.third-title Results - Nearest Neighbors
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Accuracy: 100%
+        thead
+          tr
+            th Summary
+            th Precision
+            th Recall
+            th F1 Score
+            th Support
+
+        tbody
+          tr
+            th
+              b No
+            th 1.00
+            th 1.00
+            th 1.00
+            th 20
+          tr
+            th
+              b Yes
+            th 1.00
+            th 1.00
+            th 1.00
+            th 6
+          tr
+            th
+              b AVG / Total
+            th 1.00
+            th 1.00
+            th 1.00
+            th 26
+
+      table.uk-table.uk-table-hover.uk-table-striped.uk-table-condensed(style="margin-bottom: 40px")
+        caption Confusion Matrix
+        thead
+          tr
+            th Class Labels
+            th NO
+            th Yes
+        tbody
+          tr
+            th
+              b NO
+            th 20
+            th 0
+          tr
+            th
+              b YES
+            th 0
+            th 6
+
+      p.content-normal.justify.italify <b>Note: </b> precision is the number of true positives divided by the number of true positives and negatives. It determines the fraction of records that actually turn out to be positive in the group the classifier has declared a positive class. The higher the precision is, the lower the number of false positive errors. On the other hand, recall is the number of true positives divided by the number of true positives and false negatives. It measures the fraction of positive examples correctly predicted by the classifier. The F1 score repents the harmonic mean between recall and precision.
+
+      p.content-normal.justify It is important to note that since there are so few elements in the dataset, it is hard to determine that the models are actually generalizable to any case. In order to improve this a little, I am going to use a <b>cross-validation</b> method to separate the data into training and test set data, using the <b>leave one approach</b>, by which one test sample is compared to the rest of the data, iterating over until all samples have been considered.
+
+      p.content-normal.justify After using this method, the results <b>are still very impressive</b>. The accuracy of each method is the following:
+
+      ul.content-normal.single-spacing.justify
+        li <b>Stochastic Gradient Descent:</b> 62.16% accuracy.
+        li <b>Linear SVC:</b> 72.97% accuracy.
+        li <b>SVC Kernel:</b> 43.24% accuracy.
+        li <b>Perceptron L1:</b> 70.27% accuracy.
+        li <b>Perceptron L2:</b> 95.95% accuracy.
+        li <b>Nearest Neighbors:</b> 87.83% accuracy.
+
+      p.content-normal.justify Since Perceptron L2 is the model with the greatest accuracy, that is the one I would stick with for further data analysis.
+
+      h3.content-title
+            b.second-title.third-title Conclusion
+
+      p.content-normal.justify I have built a model that is able to successfully determine whether a set of word counts for more than 500 words related to terrorism is correlated with major terrorist attacks. It is however worth considering that the entire model was built based on the assumptions specified earlier, about how people would talk about a terrorist attack in the year that it occurred and 2 years later depending on the impact the attack had. Because of this, given a set of words in a particular year, while my model is able to determine if the correlate to a terrorist attack, it is not able to determine exactly in what year that attack occurred or to what attack specifically the word count refers to, only give an approximation.
+
+      p.content-normal.justify These results are technically already compared to a list of major terrorist attacks, since the model is trained with such data and tested with it. In that sense, a test data will not know anything about the attacks, but once classified it is compared to it to determine the accuracy of the model.
+
+      div.uk-margin-large-top
+
+
+    div.uk-width-2-6
+      div.uk-grid-1-1
+        div(style="background-color: #eee;
+      max-width: 180px;
+      border-radius: 8px;
+      margin-left: 65px;
+      margin-top: 58px; visibility: hidden")
+          p(style="padding: 5px;
+      color: #999;
+      padding-left: 20px;") Project Image Gallery
+      ul.uk-grid-1-2.uk-thumbnav.uk-margin-left(style="border-left: 1px solid #bbb;
+      padding-bottom: 10px; padding-left: 35px;
+      margin-top: 20px;")
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/terrorist_attacks_distribution.jpg" data-uk-lightbox="{group:'my-group'}" title="Distribution of Terrorist Attacks per Year" data-lightbox-type="image")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/terrorist_attacks_distribution_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/major_terrorist_attacks_distribution.jpg" data-uk-lightbox="{group:'my-group'}" title="Distribution of Major Terrorist Attacks")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/major_terrorist_attacks_distribution_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/true_major_terrorist_attacks.jpg" data-uk-lightbox="{group:'my-group'}" title="Distribution of Seleted Major Terrorist Attacks")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/true_major_terrorist_attacks_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_1.jpg" data-uk-lightbox="{group:'my-group'}" title="Words Distribution Example 1")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_1_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_norm1.jpg" data-uk-lightbox="{group:'my-group'}" title="Words Distribution Example 1 Normalized")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_norm1_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_2.jpg" data-uk-lightbox="{group:'my-group'}" title="Words Distribution Example 2")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_2_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+        a(href="https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_norm2.jpg" data-uk-lightbox="{group:'my-group'}" title="Words Distribution Example 2 Normalized")
+          li = image_tag("https://s3-us-west-2.amazonaws.com/ojh22/Terrorist+Attacks/words_example_norm2_thumb.jpg", :alt => "rss feed", class: "photo-2")
+
+
+
+
+
+javascript:
+  SyntaxHighlighter.all()

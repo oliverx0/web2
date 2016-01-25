@@ -1,0 +1,85 @@
+
+
+div.uk-height-1-1.home_test.uk-cover-background.uk-position-relative
+  div.uk-height-1-1(style="position: absolute; background: rgba(0,0,0,0.6); width: 100%")
+
+  div.uk-position-cover
+    / h1.uk-margin-large-top.uk-margin-large-left(style="font-family: 'Josefin Sans', sans-serif; letter-spacing: 0.289474em; font-size: 33px; color: #fbfbfb;")
+    /   b OLIVER HOFFMAN
+
+    div
+      ul(style="list-style-type: none; position: absolute;")
+        li(style="    cursor: pointer; display: inline-block; display: inline-block; margin-left: 20px; background-color: rgba(0,0,0,0.7); color: #fbfbfb; font-family: 'Josefin Sans', sans-serif; padding-top: 8px; padding-bottom: 5px; padding-left: 10px; padding-right: 10px; border-radius: 3px; width: 80px; text-align: center; margin-top: 13px;") Helo
+        li(style="    cursor: pointer; display: inline-block; display: inline-block; margin-left: 20px; background-color: rgba(0,0,0,0.7); color: #fbfbfb; font-family: 'Josefin Sans', sans-serif; padding-top: 8px; padding-bottom: 5px; padding-left: 10px; padding-right: 10px; border-radius: 3px; width: 80px; text-align: center; margin-top: 13px;") Helo
+
+  div.uk-position-cover.uk-flex.uk-flex-center.uk-flex-middle
+
+        div(style="width: 500px")
+          div#aha
+            p#text(style="font-family: 'Josefin Sans', sans-serif; letter-spacing: 0.1em; font-size: 33px; color: #fbfbfb; padding-bottom: 5px; text-align: center") Reinaldo Hoffman
+            div#aha2
+
+  / div.uk-grid
+  /   div#aha3.uk-width-1-1(style="margin-top: 20px; background: rgba(0,0,0,0.6); min-height: 100px")
+        / p(style="font-family: 'Josefin Sans', sans-serif; letter-spacing: 0.1em; font-size: 17px; color: #fbfbfb; z-index: 200000") Hello
+
+
+
+  / ul(style="float: left" class="uk-slideshow uk-slideshow-fullscreen" data-uk-slideshow="{autoplay:true, animation: 'fade', kenburns: true, autoplayInterval: 6000, duration: 2000}")
+  /   li = image_tag("desk.jpg", :alt => "rss feed")
+  /   / li = image_tag("https://images.unsplash.com/photo-1441716844725-09cedc13a4e7?q=80&fm=jpg&s=c895a1f219d174952415b9b7a0811e62", :alt => "rss feed")
+  /   / li = image_tag("https://images.unsplash.com/photo-1441742917377-57f78ee0e582?q=80&fm=jpg&s=a79e8a2beba8b3a1ad251798a9024d8b", :alt => "rss feed")
+
+  / div.uk-width-1-1(style="z-index: 10000; position: absolute")
+  /   div.uk-grid.fade-header(style="margin-bottom: 35px")
+  /     div.uk-width-3-5
+  /       h1.top-title.uk-margin-large-top.uk-margin-large-left
+  /         b OLIVER HOFFMAN
+
+  / / div.uk-grid
+  / /   div.uk-width-1-2
+  / /     div.uk-grid
+  / /       div.uk-width-1-2
+  / /         div.uk-grid
+  / /           div.uk-width-1-5
+  / /           div.uk-widht-4-5
+  / /             div.uk-grid
+  / /               div.uk-width-5-6.uk-text-center(style="background: rgba(0,0,0,0.8); padding: 0")
+  / /                 a.uk-width-1-1.uk-margin-top.uk-icon.uk-icon-small.uk-icon-github(style="color: #d5d5d5; font-size: 17px" data-uk-tooltip="{offset:20, animation: true,pos:'right'}" title="Github")
+  / /                 a.uk-width-1-1.uk-margin-top.uk-icon.uk-icon-small.uk-icon-linkedin(style="color: #d5d5d5; font-size: 16px" data-uk-tooltip="{offset:20, animation: true,pos:'right'}" title="Linkedin")
+  / /                 a.uk-width-1-1.uk-margin-top.uk-icon.uk-icon-small.uk-icon-facebook(style="color: #d5d5d5; font-size: 16px" data-uk-tooltip="{offset:20, animation: true,pos:'right'}" title="Facebook")
+  / /                 a.uk-width-1-1.uk-margin-top.uk-margin-bottom.uk-icon.uk-icon-small.uk-icon-download(style="color: #d5d5d5; font-size: 16px" data-uk-tooltip="{offset:20, animation: true,pos:'right'}" title="Download Resume")
+  / / div.uk-margin-large-top.uk-margin-left.uk-text-center.uk-height-1-1(style="width: 80px; background: rgba(0,0,0,0.7);")
+  /   / div.uk-margin-top.uk-icon.uk-icon-small.uk-icon-github(style="color: #fbfbfb")
+  /   / div.uk-margin-top.uk-icon.uk-icon-small.uk-icon-github(style="color: #fbfbfb")
+  /   / div.uk-margin-top.uk-icon.uk-icon-small.uk-icon-github(style="color: #fbfbfb")
+
+  / footer
+  /   p.uk-text-center.uk-text-middle.uk-margin-large-top.content-normal.italify(style="letter-spacing: 2px") Software Engineer | Graduate Student @ Cornell Tech
+javascript:
+
+  var test = d3.select("#aha")
+
+  test.attr("style", "opacity: 0; " ).transition().delay(100).duration(2000)
+           .attr("style", "opacity: 1; " )
+
+  /*test.attr("style", "margin-top: 0px" ).transition().delay(1600).duration(1500)
+           .attr("style", "margin-top: -250px" )*/
+
+  test = d3.select("#aha2")
+  test.attr("style", "height: 2px; background-color: #fbfbfb; width: 0%" ).transition().delay(500).duration(1500)
+           .attr("style", "height: 2px; background-color: #fbfbfb; width: 100%" )
+
+  /*
+  test = d3.select("#aha3")
+  test.attr("style", "margin-top: 20px; background: rgba(0,0,0,0.6); min-height: 100px; opacity: 0" ).transition().delay(2300).duration(1500).attr("style", "margin-top: 20px; background: rgba(0,0,0,0.6); min-height: 100px; opacity: 1" )
+
+
+  test = d3.select("#aha4")
+  test.attr("style", "color: #f7f7f7; opacity: 0; font-size: 30px" ).transition().delay(1400).duration(1500).attr("style", "color: #f7f7f7; opacity: 1; font-size: 30px" )
+
+  test = d3.select("#aha5")
+  test.attr("style", "color: #f7f7f7; opacity: 0; font-size: 30px" ).transition().delay(1500).duration(1500).attr("style", "color: #f7f7f7; opacity: 1; font-size: 30px" )
+  */
+
+

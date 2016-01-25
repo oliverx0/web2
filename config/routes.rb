@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   get 'resume' => 'static_pages#resume'
   get 'projects' => 'static_pages#projects'
   get 'home' => 'static_pages#home'
+  get 'home2' => 'static_pages#home2'
+  get 'home3' => 'static_pages#home3'
   get 'about' => 'static_pages#about'
 
   get 'projects/pallette' => 'projects#pallette'
@@ -31,6 +33,8 @@ Rails.application.routes.draw do
   get 'projects/gowalla' => 'projects#gowalla'
   get 'projects/beacon' => 'projects#beacon'
   get 'projects/social_data_explorer' => 'projects#social_data_explorer', as: 'explorer'
+  get 'projects/kohonen' => 'projects#kohonen', as: 'kohonen'
+
   get '*path' => redirect('/')   unless Rails.env.development?
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase

@@ -5,12 +5,26 @@ div.uk-height-1-1
 
   ul(style="float: left" class="uk-slideshow uk-slideshow-fullscreen" data-uk-slideshow="{autoplay:true, animation: 'fade', kenburns: true, autoplayInterval: 6000, duration: 2000}")
     / li = image_tag("photonyc.jpeg", :alt => "rss feed")
-    / li = image_tag("desk.jpg", :alt => "rss feed")
+    / li = image_tag("munich.jpeg", :alt => "rss feed")
     li = image_tag("https://images.unsplash.com/photo-1441716844725-09cedc13a4e7?q=80&fm=jpg&s=c895a1f219d174952415b9b7a0811e62", :alt => "rss feed")
     li = image_tag("https://images.unsplash.com/photo-1441742917377-57f78ee0e582?q=80&fm=jpg&s=a79e8a2beba8b3a1ad251798a9024d8b", :alt => "rss feed")
-
   = render 'layouts/fade_header'
 
+  div.uk-position-cover.uk-flex.uk-flex-center.uk-flex-middle
+    div#aha
+      p#text(style="font-family: 'Josefin Sans', sans-serif; letter-spacing: 0.1em; font-size: 33px; color: #fbfbfb; padding-bottom: 5px") Lets build great software.
+      div#aha2(style="height: 2px; background-color: #fbfbfb")
+      div
+        div.uk-grid(style="width: inherit; padding-left: 35px; padding-top: 30px")
+          div.uk-width-1-3(style="height: 100px; ")
+            div
+              a#aha3.uk-icon-mortar-board(style="color: #f7f7f7; font-size: 30px")
+          div.uk-width-1-3(style="height: 100px;")
+            div
+              a#aha4.uk-icon-stack-overflow(style="color: #f7f7f7")
+          div.uk-width-1-3(style="height: 100px;")
+            div
+              a#aha5.uk-icon-user(style="color: #f7f7f7")
   / div.uk-grid
   /   div.uk-width-1-2
   /     div.uk-grid
@@ -29,5 +43,5 @@ div.uk-height-1-1
     / div.uk-margin-top.uk-icon.uk-icon-small.uk-icon-github(style="color: #fbfbfb")
     / div.uk-margin-top.uk-icon.uk-icon-small.uk-icon-github(style="color: #fbfbfb")
 
-  footer
-    p.uk-text-center.uk-text-middle.uk-margin-large-top.content-normal.italify(style="letter-spacing: 2px") Software Engineer | Graduate Student @ Cornell Tech
+  / footer
+  /   p.uk-text-center.uk-text-middle.uk-margin-large-top.content-normal.italify(style="letter-spacing: 2px") Software Engineer | Graduate Student @ Cornell Tech

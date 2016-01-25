@@ -41,4 +41,7 @@ class ProjectsController < ApplicationController
   def social_data_explorer
   end
 
+  def kohonen
+  end
+
 end
